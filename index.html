@@ -17,16 +17,16 @@
     .mono {
       font-family: 'Share Tech Mono', monospace;
     }
-    /* CRT & Scanline effect */
+    /* CRT Scanline & Grid Effect */
     .scanlines {
       background: linear-gradient(
         rgba(18, 16, 16, 0) 50%, 
         rgba(0, 0, 0, 0.4) 50%
       ), linear-gradient(
         90deg,
-        rgba(255, 0, 0, 0.03),
-        rgba(0, 255, 0, 0.01),
-        rgba(0, 0, 255, 0.03)
+        rgba(0, 255, 255, 0.03),
+        rgba(0, 0, 0, 0.01),
+        rgba(255, 0, 255, 0.03)
       );
       background-size: 100% 4px, 6px 100%;
       pointer-events: none;
@@ -35,19 +35,19 @@
       text-shadow: 0 0 10px rgba(56, 189, 248, 0.6), 0 0 20px rgba(56, 189, 248, 0.3);
     }
     .red-glow {
-      text-shadow: 0 0 10px rgba(239, 68, 68, 0.7);
+      text-shadow: 0 0 10px rgba(244, 63, 94, 0.7);
     }
     .glass-panel {
       background: rgba(13, 20, 36, 0.75);
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(10px);
       border: 1px solid rgba(56, 189, 248, 0.2);
     }
     .glass-panel-warning {
-      background: rgba(30, 15, 15, 0.8);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(239, 68, 68, 0.3);
+      background: rgba(30, 15, 20, 0.85);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(244, 63, 94, 0.35);
     }
-    /* Custom scrollbar */
+    /* Custom Scrollbar */
     ::-webkit-scrollbar {
       width: 6px;
     }
@@ -64,21 +64,21 @@
   </style>
 </head>
 <body class="min-h-screen relative overflow-x-hidden selection:bg-cyan-500 selection:text-black">
-  <!-- Scanline Overlay -->
+  <!-- Scanline Layer -->
   <div class="fixed inset-0 scanlines z-50 pointer-events-none opacity-60"></div>
 
-  <!-- Background Ambient Glow -->
+  <!-- Ambient Cyber Lighting -->
   <div class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-96 bg-cyan-900/10 blur-[130px] pointer-events-none -z-10"></div>
   <div class="fixed bottom-0 right-0 w-80 h-80 bg-blue-900/10 blur-[120px] pointer-events-none -z-10"></div>
 
   <!-- Main Container -->
   <div id="app" class="min-h-screen flex flex-col justify-between max-w-4xl mx-auto p-4 md:p-8 z-10 relative">
 
-    <!-- HEADER / NAVIGATION -->
+    <!-- Top Bar -->
     <header class="flex items-center justify-between border-b border-slate-800 pb-4 mb-6">
       <div class="flex items-center gap-2 cursor-pointer" onclick="showScreen('screen-top')">
         <span class="inline-block w-2.5 h-2.5 bg-cyan-400 rounded-full animate-ping"></span>
-        <span class="text-xs tracking-widest text-cyan-400 mono uppercase">DIMENSION SECURE SYSTEM v4.9</span>
+        <span class="text-xs tracking-widest text-cyan-400 mono uppercase">DIMENSION SECURE GATEWAY v4.9.2</span>
       </div>
       <div id="auth-status-badge" class="text-xs text-slate-500 mono border border-slate-800 px-2.5 py-1 rounded bg-slate-950/60">
         STATUS: GUEST_MODE
@@ -88,14 +88,14 @@
     <!-- ==================== SCREEN 1: TOP LANDING ==================== -->
     <section id="screen-top" class="my-auto py-12 flex flex-col items-center text-center">
       <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyan-500/30 bg-cyan-950/30 text-cyan-400 text-xs tracking-wider mb-6 mono">
-        CONNECTING TO QUANTUM LAYER
+        CLASSIFIED FREQUENCY // METRO TERMINAL
       </div>
 
       <h1 class="text-5xl md:text-7xl font-extrabold tracking-widest text-white mb-4 cyber-glow">
         ディメンション
       </h1>
       <p class="text-slate-400 text-sm md:text-base max-w-md tracking-wider mb-10 mono">
-        PROJECT DIMENSION // CLASSIFIED GATEWAY
+        PROJECT DIMENSION // INTERNAL PORTAL GATE
       </p>
 
       <div class="flex flex-col sm:flex-row gap-4 w-full max-w-xs">
@@ -108,7 +108,7 @@
       </div>
 
       <div class="mt-14 text-xs text-slate-600 mono">
-        AUTHORIZED PERSONNEL ONLY. ALL ACTIONS ARE LOGGED.
+        AUTHORIZED PERSONNEL ONLY. ALL CONNECTIONS ARE MONITORED.
       </div>
     </section>
 
@@ -138,7 +138,7 @@
         </div>
       </div>
 
-      <!-- 必須試験グループ -->
+      <!-- 必須試験 -->
       <div>
         <div class="flex items-center gap-2 mb-3">
           <span class="px-2.5 py-0.5 text-xs font-bold bg-rose-500/20 border border-rose-500/40 text-rose-300 rounded-md tracking-wider">
@@ -146,12 +146,10 @@
           </span>
           <span class="text-xs text-slate-400">※全てクリアする必要があります</span>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="mandatory-exams-container">
-          <!-- Mandatory Cards injected by JS -->
-        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="mandatory-exams-container"></div>
       </div>
 
-      <!-- 任意試験グループ -->
+      <!-- 任意試験 -->
       <div>
         <div class="flex items-center gap-2 mb-3">
           <span class="px-2.5 py-0.5 text-xs font-bold bg-blue-500/20 border border-blue-500/40 text-blue-300 rounded-md tracking-wider">
@@ -159,12 +157,10 @@
           </span>
           <span class="text-xs text-slate-400">※1つ以上クリアで規定到達</span>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="optional-exams-container">
-          <!-- Optional Cards injected by JS -->
-        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="optional-exams-container"></div>
       </div>
 
-      <!-- 合格通知 & ID/PASS表示エリア -->
+      <!-- 合格証 & 認証情報提示エリア -->
       <div id="pass-certificate-area" class="hidden glass-panel p-6 rounded-2xl border-emerald-500/50 bg-emerald-950/20">
         <div class="flex items-center gap-3 text-emerald-400 font-bold text-lg mb-2">
           <svg class="w-6 h-6 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -198,7 +194,7 @@
         <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
           <div>
             <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1 mono">ID</label>
-            <input type="text" id="input-id" required autocomplete="off" placeholder="DIM-XXXX or KANBU" class="w-full px-4 py-3 bg-slate-950/80 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-cyan-400 mono text-sm transition-colors">
+            <input type="text" id="input-id" required autocomplete="off" placeholder="DIM-XXXX or EXECUTIVE ID" class="w-full px-4 py-3 bg-slate-950/80 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-cyan-400 mono text-sm transition-colors">
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1 mono">PASSWORD</label>
@@ -221,9 +217,9 @@
       </div>
     </section>
 
-    <!-- ==================== SCREEN 4: 内部ポータル (DASHBOARD) ==================== -->
+    <!-- ==================== SCREEN 4: 内部ポータル (PORTAL) ==================== -->
     <section id="screen-portal" class="hidden flex-col gap-6 my-auto py-2">
-      <!-- Portal Sub Header -->
+      <!-- User Sub Header -->
       <div class="glass-panel p-4 rounded-2xl flex flex-wrap items-center justify-between gap-3 border-slate-700">
         <div class="flex items-center gap-3">
           <div id="role-avatar" class="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-400 flex items-center justify-center font-bold text-cyan-300 mono">
@@ -264,10 +260,9 @@
           <h3 class="text-sm font-bold text-white flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-cyan-400"></span> 進行中オペレーション / 案件一覧
           </h3>
-          <span class="text-xs text-slate-500 mono">ACTIVE DIRECTIVE: 03</span>
+          <span class="text-xs text-slate-500 mono">ACTIVE DIRECTIVES</span>
         </div>
 
-        <!-- Job Cards -->
         <div class="grid grid-cols-1 gap-4">
           <!-- ターゲット案件: 確認作業:日比谷 -->
           <div class="glass-panel p-5 rounded-2xl border-cyan-500/40 relative overflow-hidden">
@@ -289,7 +284,6 @@
               日比谷で計画の一部となる重要な案件がある。チラシは既に配布済なので、それを元に作業をしてほしい。
             </p>
 
-            <!-- 応募ボタン & 応募後テキスト -->
             <div id="hibiya-action-area">
               <button onclick="applyHibiyaJob()" class="px-5 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-black font-bold text-xs rounded-xl tracking-wider shadow-md transition-all">
                 応募する
@@ -356,7 +350,7 @@
 
       <!-- TAB 2: 掲示板 (BBS) -->
       <div id="tab-content-bbs" class="hidden space-y-4">
-        <!-- 一般ユーザー時の表示 -->
+        <!-- 一般ユーザー時: 閲覧不可 -->
         <div id="bbs-locked-view" class="glass-panel-warning p-10 rounded-2xl text-center space-y-3">
           <div class="w-12 h-12 mx-auto rounded-full bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
@@ -365,37 +359,73 @@
             【幹部以外には閲覧権限がありません】
           </h4>
           <p class="text-xs text-slate-400 max-w-sm mx-auto">
-            このセクションは最高幹部暗号化キーを保有するアカウントのみアクセス可能です。セキュリティ規約に基づき照会が遮断されました。
+            このセクションは幹部権限アカウントのみ閲覧が許可されています。一般構成員のアクセスは規約に基づき遮断されました。
           </p>
         </div>
 
-        <!-- 幹部ユーザー時の特別表示 -->
+        <!-- 幹部ユーザー時のみ表示される指定会話ログ -->
         <div id="bbs-executive-view" class="hidden space-y-3">
           <div class="flex items-center justify-between border-b border-rose-900/40 pb-2">
             <h4 class="text-sm font-bold text-rose-400 tracking-wider flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span> 最高幹部連絡掲示板 [極秘]
+              <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span> 最高幹部連絡掲示板 [暗号化内部通信]
             </h4>
             <span class="text-xs text-rose-300 mono">CLEARANCE: EXECUTIVE_A</span>
           </div>
 
-          <div class="glass-panel p-4 rounded-xl border-rose-900/40 space-y-2">
-            <div class="flex justify-between items-center text-xs">
-              <span class="text-white font-bold">[統括] 日比谷作戦について</span>
-              <span class="text-slate-500 mono">2026-10-28 09:12</span>
+          <!-- 指定会話ログ 6件 -->
+          <div class="space-y-2.5">
+            <div class="glass-panel p-3.5 rounded-xl border-slate-800">
+              <div class="flex justify-between items-center text-xs mb-1">
+                <span class="text-rose-300 font-bold">田中(ID:AKANAT)</span>
+                <span class="text-slate-500 mono text-[10px]">10:14</span>
+              </div>
+              <p class="text-xs text-slate-200">「どうやら神田のスマホが無くなったようだ」</p>
             </div>
-            <p class="text-xs text-slate-300 leading-relaxed">
-              末端への指示は日比谷A12のポスターに集約した。封筒の件は一般構成員には全貌を知らせるな。
-            </p>
+
+            <div class="glass-panel p-3.5 rounded-xl border-slate-800">
+              <div class="flex justify-between items-center text-xs mb-1">
+                <span class="text-rose-300 font-bold">山本(ID:OTOMAMAY)</span>
+                <span class="text-slate-500 mono text-[10px]">10:16</span>
+              </div>
+              <p class="text-xs text-slate-200">「あいつのスマホ、裏面にPASS書いてあるから、この掲示板を見られるかもしれない。」</p>
+            </div>
+
+            <div class="glass-panel p-3.5 rounded-xl border-slate-800">
+              <div class="flex justify-between items-center text-xs mb-1">
+                <span class="text-rose-300 font-bold">白井(ID:IARIHS)</span>
+                <span class="text-slate-500 mono text-[10px]">10:18</span>
+              </div>
+              <p class="text-xs text-slate-200">「核心的な話はしていないが念のため、あいつの掲示板書き込み機能は使えなくした」</p>
+            </div>
+
+            <div class="glass-panel p-3.5 rounded-xl border-slate-800">
+              <div class="flex justify-between items-center text-xs mb-1">
+                <span class="text-rose-300 font-bold">山本(ID:OTOMAMAY)</span>
+                <span class="text-slate-500 mono text-[10px]">10:21</span>
+              </div>
+              <p class="text-xs text-slate-200">「侵入者は牢屋に入れました」</p>
+            </div>
+
+            <div class="glass-panel p-3.5 rounded-xl border-slate-800">
+              <div class="flex justify-between items-center text-xs mb-1">
+                <span class="text-rose-300 font-bold">田中(ID:AKANAT)</span>
+                <span class="text-slate-500 mono text-[10px]">10:24</span>
+              </div>
+              <p class="text-xs text-slate-200">「牢屋のパスワードは組織の記念日だったよな？」</p>
+            </div>
+
+            <div class="glass-panel p-3.5 rounded-xl border-slate-800">
+              <div class="flex justify-between items-center text-xs mb-1">
+                <span class="text-rose-300 font-bold">白井(ID:IARIHS)</span>
+                <span class="text-slate-500 mono text-[10px]">10:25</span>
+              </div>
+              <p class="text-xs text-slate-200">「そうだ。きちんとやっておけ。」</p>
+            </div>
           </div>
 
-          <div class="glass-panel p-4 rounded-xl border-rose-900/40 space-y-2">
-            <div class="flex justify-between items-center text-xs">
-              <span class="text-white font-bold">[警備] 潜入者の捕獲報告</span>
-              <span class="text-slate-500 mono">2026-10-28 03:45</span>
-            </div>
-            <p class="text-xs text-slate-300 leading-relaxed">
-              東側ブロック地下にて不審者（自称フク）を拘束。B3収容室へ移送済み。脱出の可能性はゼロである。
-            </p>
+          <!-- 白井の発言に連動した神田(ADNAK)アカウントの書き込み制限表示 -->
+          <div class="mt-4 p-3 bg-rose-950/40 border border-rose-900/50 rounded-xl text-center">
+            <span class="text-[11px] text-rose-400 mono">※白井(ID:IARIHS)の権限制御により、神田(ID:ADNAK)アカウントの書き込み権限は停止されています</span>
           </div>
         </div>
       </div>
@@ -417,11 +447,11 @@
         <div class="relative">
           <textarea id="memo-textarea" rows="12" oninput="handleMemoInput(this.value)" placeholder="メモを入力..." class="w-full p-4 rounded-xl glass-panel text-slate-100 text-sm leading-relaxed focus:outline-none focus:border-cyan-400 resize-none mono"></textarea>
           
-          <!-- 入力ロック演出オーバーレイ -->
+          <!-- ロック中のオーバーレイ表示 -->
           <div id="memo-typing-overlay" class="hidden absolute inset-0 bg-black/40 rounded-xl backdrop-blur-[1px] flex items-center justify-center pointer-events-auto">
             <div class="px-4 py-2 rounded-xl bg-slate-900 border border-cyan-400/50 text-cyan-300 text-xs font-mono flex items-center gap-2 shadow-2xl animate-pulse">
               <span class="w-2 h-2 bg-cyan-400 rounded-full animate-ping"></span>
-              REMOTELY TYPING... 書き込みロック中
+              REMOTELY TYPING... 通信受信中（書き込みロック中）
             </div>
           </div>
         </div>
@@ -430,12 +460,12 @@
 
     <!-- FOOTER -->
     <footer class="mt-8 border-t border-slate-900 pt-4 flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-600 mono gap-2">
-      <div>DIMENSION PROTOCOL // ARG EXPERIMENTAL TERMINAL</div>
-      <div>ENCRYPTED CONNECTION</div>
+      <div>DIMENSION PROTOCOL // TERMINAL: metro.html</div>
+      <div>SECURED ARG GATEWAY</div>
     </footer>
   </div>
 
-  <!-- ==================== EXAM MODAL / GAME ARENA ==================== -->
+  <!-- ==================== EXAM MODAL / MINI GAMES ==================== -->
   <div id="exam-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
     <div class="glass-panel w-full max-w-lg rounded-2xl p-6 border-cyan-500/40 relative max-h-[90vh] overflow-y-auto">
       <button onclick="closeExamModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg mono">
@@ -449,9 +479,7 @@
 
       <!-- RULES STAGE -->
       <div id="modal-rules-stage" class="space-y-4">
-        <div class="bg-slate-950/60 p-4 rounded-xl border border-slate-800 text-xs text-slate-300 leading-relaxed" id="modal-exam-rules">
-          <!-- Rule text inserted here -->
-        </div>
+        <div class="bg-slate-950/60 p-4 rounded-xl border border-slate-800 text-xs text-slate-300 leading-relaxed whitespace-pre-line" id="modal-exam-rules"></div>
         <button onclick="startActiveExamGame()" class="w-full py-3 bg-cyan-500 hover:bg-cyan-400 text-black font-bold rounded-xl tracking-wider text-sm transition-all shadow-lg shadow-cyan-500/20">
           スタート
         </button>
@@ -459,9 +487,7 @@
 
       <!-- GAME PLAY STAGE -->
       <div id="modal-game-stage" class="hidden space-y-4 mt-2">
-        <div id="game-arena-content">
-          <!-- Interactive mini-game generated dynamically -->
-        </div>
+        <div id="game-arena-content"></div>
       </div>
 
       <!-- CLEAR STAGE -->
@@ -470,7 +496,7 @@
           <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
         </div>
         <h4 class="text-2xl font-bold text-white cyber-glow">試験クリア！</h4>
-        <p class="text-xs text-slate-300" id="clear-congrats-text">規定の適性を実証しました。</p>
+        <p class="text-xs text-slate-300">規定の適性を実証しました。</p>
         <button onclick="closeExamModal()" class="w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-bold rounded-xl tracking-wider text-xs transition-all">
           試験リストに戻る
         </button>
@@ -489,13 +515,13 @@
         <button onclick="document.getElementById('chat-popup').classList.add('hidden')" class="text-slate-500 hover:text-white text-xs">&times;</button>
       </div>
       <p class="text-xs font-bold text-white mt-1">チャットが来ました！</p>
-      <p class="text-[11px] text-slate-400 mt-0.5">フク: 「牢屋から脱出できたっす！感謝するっす…！」</p>
+      <p class="text-[11px] text-slate-400 mt-0.5">フク: 「牢屋から出ることができたっす！今から他のみんなと合流するっす！」</p>
     </div>
   </div>
 
   <script>
     /* ========================================================================
-       STATE MANAGEMENT & AUDIO SYNTHESIZER
+       STATE MANAGEMENT & AUDIO ENGINE
        ======================================================================== */
     const STATE = {
       currentUser: null, // null | 'normal' | 'executive'
@@ -507,7 +533,6 @@
       executiveMemoInitialSet: false
     };
 
-    // Synthesized Sound Effects (No external URLs needed)
     const AudioEngine = {
       ctx: null,
       init() {
@@ -530,9 +555,7 @@
           gain.connect(this.ctx.destination);
           osc.start();
           osc.stop(this.ctx.currentTime + duration);
-        } catch (e) {
-          // Audio autoplay safe catch
-        }
+        } catch (e) {}
       },
       playSuccess() {
         this.playBeep(523.25, 'triangle', 0.12);
@@ -555,7 +578,7 @@
         mandatory: true,
         title: '必須第1試験: 論理暗号解読',
         category: '暗号解析適性',
-        rules: '表示された法則からアルファベットのシフト暗号を解読してください。\n「D I M E」を+1シフトした英単語【E J N F】のように、指定された単語を暗号化してください。',
+        rules: '表示された法則からアルファベットのシフト暗号を解読してください。\n例：「D I M E」を+1シフトした英単語は【E J N F】です。\n提示された文字列を指定数シフトさせて入力してください。',
         setupGame(container) {
           const words = [
             { raw: 'GATE', shift: 1, ans: 'HBUF' },
@@ -598,7 +621,7 @@
             </div>
           `;
           window._reactionState = 'waiting';
-          const delay = 1500 + Math.random() * 2000;
+          const delay = 1400 + Math.random() * 2000;
           window._reactionTimer = setTimeout(() => {
             const box = document.getElementById('reaction-box');
             const txt = document.getElementById('reaction-text');
@@ -719,7 +742,7 @@
     ];
 
     /* ========================================================================
-       EXAMS LOGIC & RENDERING
+       EXAMS RENDER & VALIDATION
        ======================================================================== */
     function renderExamsList() {
       const mandContainer = document.getElementById('mandatory-exams-container');
@@ -959,7 +982,7 @@
     }
 
     /* ========================================================================
-       SCREEN NAVIGATION & LOGIN LOGIC
+       NAVIGATION & AUTHENTICATION
        ======================================================================== */
     function showScreen(screenId) {
       AudioEngine.playBeep(480, 'sine', 0.05);
@@ -987,13 +1010,10 @@
       const pass = document.getElementById('input-pass').value.trim();
       const errBox = document.getElementById('login-error-msg');
 
-      // 幹部アカウント認証条件:
-      // ID: KANBU (または 幹部, DIM-ADMIN) / PASS: DIM-EXECUTIVE-88 (または EXECUTIVE-88)
-      const isExecutive = ((id.toUpperCase() === 'KANBU' || id === '幹部' || id.toUpperCase() === 'DIM-ADMIN') && 
-                          (pass === 'DIM-EXECUTIVE-88' || pass === 'EXECUTIVE-88'));
+      // 幹部アカウント: ID「ADNAK」, PASS「2569」
+      const isExecutive = (id.toUpperCase() === 'ADNAK' && pass === '2569');
 
-      // 一般構成員認証条件:
-      // 試験クリアで取得できる ID: DIM-7749 / PASS: NEXUS-X
+      // 一般構成員: ID「DIM-7749」, PASS「NEXUS-X」
       const isNormal = (id.toUpperCase() === 'DIM-7749' && pass.toUpperCase() === 'NEXUS-X');
 
       if (isExecutive) {
@@ -1026,19 +1046,19 @@
       if (STATE.currentUser === 'executive') {
         badge.innerText = 'STATUS: EXECUTIVE_OVERRIDE';
         badge.className = 'text-xs text-rose-400 mono border border-rose-800 px-2.5 py-1 rounded bg-rose-950/60 font-bold';
-        roleDisplayName.innerText = '最高幹部';
+        roleDisplayName.innerText = '最高幹部 [神田]';
         roleDisplayName.className = 'font-bold text-rose-400 text-sm red-glow';
         roleBadge.innerText = 'LEVEL 5 [EXECUTIVE]';
         roleBadge.className = 'text-[10px] px-2 py-0.5 rounded font-mono font-bold bg-rose-950 text-rose-300 border border-rose-800';
-        userIdDisplay.innerText = 'ID: KANBU-CLEARANCE';
+        userIdDisplay.innerText = 'ID: ADNAK';
         roleAvatar.innerText = 'EXEC';
         roleAvatar.className = 'w-10 h-10 rounded-xl bg-rose-500/20 border border-rose-400 flex items-center justify-center font-bold text-rose-300 mono';
 
-        // 掲示板: 幹部用表示
+        // 幹部専用掲示板を表示、ロック画面を隠す
         bbsLocked.classList.add('hidden');
         bbsExec.classList.remove('hidden');
 
-        // 幹部メモ初期テキスト設定
+        // 幹部メモ初期テキスト
         if (!STATE.executiveMemoInitialSet) {
           const initMemo = `これ、誰か見てるっすか？俺はフクっす。\n今、ディメンションのアジトに潜入して色々探ってたんすけど、途中で捕まって今牢屋みたいなところにいるっす。\n\n牢屋のナンバーさえ分かれば脱出できるんすけど…。\n`;
           memoArea.value = initMemo;
@@ -1059,7 +1079,7 @@
         roleAvatar.innerText = 'UID';
         roleAvatar.className = 'w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-400 flex items-center justify-center font-bold text-cyan-300 mono';
 
-        // 掲示板: ロック表示
+        // 一般構成員: 掲示板はロック画面を表示
         bbsLocked.classList.remove('hidden');
         bbsExec.classList.add('hidden');
 
@@ -1077,6 +1097,7 @@
       const directiveBox = document.getElementById('hibiya-result-directive');
 
       if (STATE.currentUser === 'executive') {
+        // 幹部: 応募済みではなく、単に残り0名(受付終了)
         slots.innerText = '残り0名';
         slots.className = 'text-sm font-bold mono text-slate-500';
         actionArea.innerHTML = `
@@ -1086,6 +1107,7 @@
         `;
         directiveBox.classList.add('hidden');
       } else {
+        // 一般構成員
         if (STATE.hibiyaAppliedNormal) {
           slots.innerText = '残り0名 (応募済)';
           slots.className = 'text-sm font-bold mono text-emerald-400';
@@ -1139,7 +1161,7 @@
     }
 
     /* ========================================================================
-       MEMO LOGIC & 幹部「フク」脱出ギミック
+       MEMO LOGIC & フク脱出シーケンス（パスワード: 1007）
        ======================================================================== */
     function handleMemoInput(val) {
       if (STATE.isFukuTyping) return;
@@ -1151,8 +1173,10 @@
       statusEl.innerText = 'SAVED';
       setTimeout(() => { statusEl.innerText = 'AUTO-SAVED'; }, 1000);
 
+      // 幹部時かつ「1007」が入力された場合
       if (STATE.currentUser === 'executive' && !STATE.fukuEscapeTriggered && !STATE.isFukuTyping) {
-        const pattern = /(3918|３９１８|三九一八)/;
+        // 半角1007、全角１００７、漢数字（一〇〇七、一千七、千七）
+        const pattern = /(1007|１００７|一〇〇七|一千七|千七)/;
         if (pattern.test(val)) {
           triggerFukuEscapeSequence();
         }
@@ -1174,7 +1198,7 @@
       const responseLines = [
         "",
         "「それがナンバー…？",
-        "おっ、3918で牢屋から出ることができたっす！",
+        "おっ、1007で牢屋から出ることができたっす！",
         "今から他のみんなと合流するっす」"
       ].join("\n");
 
@@ -1198,6 +1222,7 @@
           overlay.classList.add('hidden');
           localStorage.setItem('dim_executive_memo', textarea.value);
 
+          // チャットポップアップ通知
           AudioEngine.playSuccess();
           const chatPopup = document.getElementById('chat-popup');
           chatPopup.classList.remove('hidden');
