@@ -689,7 +689,6 @@
     }
 
     function loginSuccess(role) {
-      STATE.currentUserRole = role;
       const badge = document.getElementById('portal-user-badge');
       const memo = document.getElementById('memo-area');
       const hibiyaCap = document.getElementById('hibiya-capacity-badge');
@@ -697,6 +696,8 @@
       const hibiyaDir = document.getElementById('hibiya-directive');
       const boardRestricted = document.getElementById('board-restricted');
       const boardExec = document.getElementById('board-executive');
+
+      STATE.currentUserRole = role;
 
       if (role === 'executive') {
         badge.textContent = '最高幹部 (ADNAK)';
@@ -832,7 +833,7 @@
       },
       'req-2': {
         title: '【必須】第2試験：ポップアップ削除',
-        rules: '画面上に現れている５つのポップアップを削除せよ。\nポップアップに含まれているカタカナを下に入力することで削除ができる。'
+        rules: '画面上に現れている5つのポップアップを削除せよ。\nポップアップに含まれているカタカナを下に入力することで削除ができる。'
       },
       'opt-1': {
         title: '【任意】第1試験：論理暗号解読',
@@ -954,7 +955,7 @@
         </div>
         <div class="popup-stage" id="popup-stage"></div>
         <div style="display:flex; gap:8px;">
-          <input type="text" id="popup-input" placeholder="ポップアップのカタカナを入力 (例: トキメキ)" style="flex:1;">
+          <input type="text" id="popup-input" placeholder="ポップアップのカタカナを入力" style="flex:1;">
           <button class="btn btn-primary" onclick="checkReq2()">消去</button>
         </div>
       `;
@@ -970,8 +971,7 @@
         el.innerHTML = `
           <div class="popup-body">
             <div style="font-size:0.75rem; color:var(--danger); font-weight:bold; margin-bottom:4px;">${p.title}</div>
-            <div style="font-size:0.85rem; line-height:1.4; margin-bottom:4px;">${p.desc}</div>
-            <div style="font-size:0.85rem; color:var(--accent);">キーワード: <strong>${p.word}</strong></div>
+            <div style="font-size:0.85rem; line-height:1.4;">${p.desc}</div>
           </div>
         `;
         stageBox.appendChild(el);
@@ -990,7 +990,6 @@
         const el = document.getElementById('popup-node-' + p.id);
         if (el && !el.classList.contains('cleared') && input === p.word) {
           el.classList.add('cleared');
-          // 元の本文・枠線を完全に消し、「ポップアップを削除しました」の吹き出しだけにする
           el.innerHTML = `
             <div class="popup-bubble">
               💬 ポップアップを削除しました
