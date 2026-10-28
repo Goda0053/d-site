@@ -246,7 +246,7 @@
     /* ② ポップアップ削除試験エリア */
     .popup-stage {
       position: relative;
-      height: 340px;
+      height: 350px;
       background: #040609;
       border: 1px solid #1f2d3d;
       border-radius: 6px;
@@ -261,26 +261,35 @@
       border: 2px solid #33475b;
       border-radius: 6px;
       box-shadow: 0 8px 24px rgba(0,0,0,0.8);
-      transition: background 0.3s ease, border-color 0.3s ease;
+      transition: all 0.25s ease;
     }
-    /* 消去されたポップアップ：背景完全透過＋文字・枠線・吹き出しは残る */
+    /* 削除されたポップアップ：背景・枠線・影を完全に透過 */
     .test-popup.cleared {
       background: transparent !important;
-      border: 1px dashed rgba(0, 255, 204, 0.7) !important;
+      border: none !important;
       box-shadow: none !important;
+      pointer-events: none;
+      padding: 0 !important;
     }
+    /* 吹き出しのみ表示 */
     .popup-bubble {
-      margin-top: 8px;
-      padding: 6px 10px;
-      background: rgba(0, 255, 204, 0.15);
-      border: 1px solid var(--accent);
-      border-radius: 12px 12px 12px 2px;
-      font-size: 0.8rem;
-      color: var(--accent);
-      font-weight: bold;
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      padding: 8px 14px;
+      background: rgba(0, 255, 204, 0.15);
+      border: 1.5px solid var(--accent);
+      border-radius: 14px 14px 14px 2px;
+      font-size: 0.85rem;
+      color: var(--accent);
+      font-weight: bold;
+      box-shadow: 0 2px 10px rgba(0, 255, 204, 0.25);
+      backdrop-filter: blur(2px);
+      animation: popIn 0.2s ease;
+    }
+    @keyframes popIn {
+      from { transform: scale(0.85); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
     }
 
     /* 内部ポータル (ダッシュボード) */
@@ -693,7 +702,6 @@
         badge.textContent = '最高幹部 (ADNAK)';
         badge.style.color = 'var(--danger)';
         
-        // 幹部は日比谷案件に応募しておらず、最初から0名
         hibiyaCap.textContent = '募集終了 (残り0名)';
         hibiyaCap.style.borderColor = '#555';
         hibiyaCap.style.color = '#888';
@@ -824,7 +832,7 @@
       },
       'req-2': {
         title: '【必須】第2試験：ポップアップ削除',
-        rules: '画面上に現れるポップアップを削除せよ。\nポップアップに含まれているカタカナを下に入力することで「ポップアップを消去しました」という吹き出しに変わり、文字や吹き出しは残るが背景が透過して、後ろの別のポップアップが見える。\n最終的に５つのポップアップを削除すればクリア。'
+        rules: '画面上に現れている５つのポップアップを削除せよ。\nポップアップに含まれているカタカナを下に入力することで削除ができる。'
       },
       'opt-1': {
         title: '【任意】第1試験：論理暗号解読',
@@ -928,15 +936,14 @@
       }
     }
 
-    // ② 必須2: ポップアップ削除 (5枚の重なり・透過・トキメキギミック)
+    // ② 必須2: ポップアップ削除 (吹き出しのみを残して背景完全透過)
     let popupsCleared = 0;
-    // 5枚のポップアップ設定（意図的に重なり合う位置・z-indexを指定）
     const popupList = [
-      { id: 1, word: 'トキメキ', title: '【外部干渉シグナル】', desc: '別サイト連携ワード「トキメキ」を検知', top: 30, left: 40, z: 50 },
-      { id: 2, word: 'プロトコル', title: '【通信割り込み】', desc: '次世代プロトコルの暗号同期要求', top: 60, left: 140, z: 40 },
-      { id: 3, word: 'セキュリティ', title: '【アクセス制限】', desc: 'セキュリティ認証キーの整合性検証', top: 100, left: 80, z: 30 },
-      { id: 4, word: 'ネットワーク', title: '【帯域遮断警告】', desc: 'ネットワーク内への侵入者を検知', top: 130, left: 220, z: 20 },
-      { id: 5, word: 'システム', title: '【最終確認】', desc: 'システム中枢へのアクセス認可確認', top: 160, left: 120, z: 10 }
+      { id: 1, word: 'ウマイ', title: '【美味しいごはん】', desc: '美味しいごはん。梅干しウマイよ！', top: 25, left: 35, z: 50 },
+      { id: 2, word: 'アクセス', title: '【通信制限】', desc: '通信が制限されています。アクセスできません。', top: 55, left: 135, z: 40 },
+      { id: 3, word: 'セキュリティ', title: '【セキュリティ制限】', desc: '認証の整合性検証', top: 95, left: 75, z: 30 },
+      { id: 4, word: 'ネットワーク', title: '【帯域遮断警告】', desc: 'ネットワーク内への侵入者を検知', top: 125, left: 215, z: 20 },
+      { id: 5, word: 'システム', title: '【最終確認】', desc: 'システム中枢への認可確認', top: 155, left: 115, z: 10 }
     ];
 
     function initReq2(stage) {
@@ -961,15 +968,15 @@
         el.style.left = p.left + 'px';
         el.style.zIndex = p.z;
         el.innerHTML = `
-          <div style="font-size:0.75rem; color:var(--danger); font-weight:bold; margin-bottom:4px;">${p.title}</div>
-          <div style="font-size:0.85rem; line-height:1.4; margin-bottom:4px;">${p.desc}</div>
-          <div style="font-size:0.85rem; color:var(--accent);">キーワード: <strong>${p.word}</strong></div>
-          <div class="bubble-slot"></div>
+          <div class="popup-body">
+            <div style="font-size:0.75rem; color:var(--danger); font-weight:bold; margin-bottom:4px;">${p.title}</div>
+            <div style="font-size:0.85rem; line-height:1.4; margin-bottom:4px;">${p.desc}</div>
+            <div style="font-size:0.85rem; color:var(--accent);">キーワード: <strong>${p.word}</strong></div>
+          </div>
         `;
         stageBox.appendChild(el);
       });
 
-      // Enterキーでも消去可能に
       document.getElementById('popup-input').addEventListener('keydown', function(e) {
         if (e.key === 'Enter') checkReq2();
       });
@@ -982,17 +989,13 @@
       popupList.forEach(p => {
         const el = document.getElementById('popup-node-' + p.id);
         if (el && !el.classList.contains('cleared') && input === p.word) {
-          // 背景透過クラスを付与
           el.classList.add('cleared');
-          // 文字は残したまま「ポップアップを消去しました」の吹き出しを追加
-          const bubbleSlot = el.querySelector('.bubble-slot');
-          if (bubbleSlot) {
-            bubbleSlot.innerHTML = `
-              <div class="popup-bubble">
-                💬 ポップアップを消去しました
-              </div>
-            `;
-          }
+          // 元の本文・枠線を完全に消し、「ポップアップを削除しました」の吹き出しだけにする
+          el.innerHTML = `
+            <div class="popup-bubble">
+              💬 ポップアップを削除しました
+            </div>
+          `;
           popupsCleared++;
           matched = true;
         }
@@ -1003,7 +1006,7 @@
         document.getElementById('popup-count').textContent = popupsCleared;
         if (popupsCleared >= 5) {
           setTimeout(() => {
-            finishExam('req-2', '5つのポップアップをすべて消去しました！');
+            finishExam('req-2', '5つのポップアップをすべて削除しました！');
           }, 350);
         }
       } else {
@@ -1165,7 +1168,6 @@
       const hasReq2 = STATE.clearedExams.has('req-2');
       const optCleared = ['opt-1', 'opt-2', 'opt-3', 'opt-4'].filter(id => STATE.clearedExams.has(id)).length;
 
-      // 必須2つ + 任意1つ以上の合計3つ以上
       if (hasReq1 && hasReq2 && optCleared >= 1) {
         const banner = document.getElementById('pass-banner');
         banner.style.display = 'block';
