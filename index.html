@@ -243,7 +243,7 @@
       box-shadow: 0 0 30px rgba(0, 255, 204, 0.25);
     }
 
-    /* ② ポップアップ削除試験エリア */
+    /* ポップアップ削除試験エリア */
     .popup-stage {
       position: relative;
       height: 350px;
@@ -498,6 +498,13 @@
             <strong>ID:</strong> <span style="color: var(--accent);">DIM-7749</span> &nbsp;|&nbsp; 
             <strong>PASS:</strong> <span style="color: var(--accent);">NEXUS-X</span>
           </div>
+
+          <!-- ★ 追加：ID/PASSを自動入力してログイン画面へ進むボタン -->
+          <div style="margin-top: 16px;">
+            <button class="btn btn-primary" style="box-shadow: 0 0 14px rgba(0, 255, 204, 0.4);" onclick="fillCredentialsAndGoLogin()">
+              🔓 このアカウントでログイン画面へ進む
+            </button>
+          </div>
         </div>
 
         <div style="text-align: center; margin-top: 24px;">
@@ -664,6 +671,16 @@
       document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
       const target = document.getElementById(screenId);
       if (target) target.classList.add('active');
+    }
+
+    // ★ 追加：IDとPASSを自動入力してログイン画面を開く関数
+    function fillCredentialsAndGoLogin() {
+      document.getElementById('login-id').value = 'DIM-7749';
+      document.getElementById('login-pass').value = 'NEXUS-X';
+      document.getElementById('login-error').style.display = 'none';
+      showScreen('screen-login');
+      // ログイン入力欄へスムーズにスクロール
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     // ログイン処理 (ID: ADNAK / PASS: 2569)
