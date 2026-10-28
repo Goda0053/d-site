@@ -6,15 +6,16 @@
   <title>ディメンション</title>
   <style>
     :root {
-      --bg: #090c10;
-      --panel: #111822;
-      --panel-border: #1f2d3d;
+      --bg: #06090e;
+      --panel: #0e1622;
+      --panel-border: #1b2838;
       --text: #e6edf3;
-      --text-muted: #8b949e;
+      --text-muted: #7d8b99;
       --accent: #00ffcc;
-      --accent-dim: rgba(0, 255, 204, 0.15);
+      --accent-dim: rgba(0, 255, 204, 0.12);
       --danger: #ff4757;
-      --warning: #eccc68;
+      --danger-dim: rgba(255, 71, 87, 0.12);
+      --warning: #ffa502;
       --success: #2ed573;
     }
 
@@ -32,28 +33,26 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      padding: 24px 16px;
+      padding: 30px 16px;
     }
 
     .container {
       width: 100%;
-      max-width: 800px;
-      margin: 0 auto;
+      max-width: 840px;
     }
 
     /* タイトルヘッダー */
     header {
       text-align: center;
-      margin-bottom: 24px;
-      padding-bottom: 16px;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
       border-bottom: 1px solid var(--panel-border);
     }
     h1.brand-title {
-      font-size: 2.2rem;
-      letter-spacing: 0.35rem;
+      font-size: 2.4rem;
+      letter-spacing: 0.4rem;
       color: var(--accent);
-      text-shadow: 0 0 12px rgba(0, 255, 204, 0.4);
+      text-shadow: 0 0 16px rgba(0, 255, 204, 0.45);
     }
 
     /* パネル共通 */
@@ -61,18 +60,18 @@
       background: var(--panel);
       border: 1px solid var(--panel-border);
       border-radius: 8px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.55);
     }
 
     /* ボタン共通 */
     .btn {
       display: inline-block;
-      background: var(--panel-border);
+      background: #14202e;
       color: var(--text);
-      border: 1px solid #30445c;
-      padding: 10px 18px;
+      border: 1px solid #283e56;
+      padding: 10px 20px;
       border-radius: 4px;
       font-size: 0.95rem;
       cursor: pointer;
@@ -84,11 +83,12 @@
       background: var(--accent-dim);
       border-color: var(--accent);
       color: var(--accent);
+      box-shadow: 0 0 10px rgba(0, 255, 204, 0.25);
     }
     .btn:disabled {
-      opacity: 0.4;
+      opacity: 0.45;
       cursor: not-allowed;
-      border-color: #333;
+      border-color: #222;
     }
     .btn-primary {
       background: var(--accent-dim);
@@ -99,11 +99,7 @@
     .btn-danger {
       border-color: var(--danger);
       color: var(--danger);
-    }
-    .btn-danger:hover:not(:disabled) {
-      background: rgba(255, 71, 87, 0.15);
-      border-color: var(--danger);
-      color: var(--danger);
+      background: var(--danger-dim);
     }
 
     .btn-group {
@@ -113,7 +109,7 @@
       flex-wrap: wrap;
     }
 
-    /* 画面切り替えクラス */
+    /* 画面切り替え */
     .screen {
       display: none;
     }
@@ -133,43 +129,44 @@
     }
     input[type="text"], input[type="password"], textarea {
       width: 100%;
-      background: #06090e;
+      background: #05080c;
       border: 1px solid var(--panel-border);
       border-radius: 4px;
-      padding: 10px 12px;
+      padding: 12px 14px;
       color: var(--text);
       font-size: 1rem;
     }
     input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
       outline: none;
       border-color: var(--accent);
-      box-shadow: 0 0 8px rgba(0, 255, 204, 0.2);
+      box-shadow: 0 0 10px rgba(0, 255, 204, 0.25);
     }
 
-    /* 試験選択画面 */
+    /* 試験一覧 */
     .exam-category {
       margin-bottom: 24px;
     }
     .exam-category h3 {
       font-size: 1.1rem;
-      margin-bottom: 12px;
-      padding-left: 8px;
+      margin-bottom: 14px;
+      padding-left: 10px;
       border-left: 4px solid var(--accent);
     }
     .exam-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 14px;
     }
     .exam-card {
-      background: #0c1219;
+      background: #090e16;
       border: 1px solid var(--panel-border);
       border-radius: 6px;
-      padding: 14px;
+      padding: 16px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 10px;
+      gap: 12px;
+      transition: border-color 0.2s ease;
     }
     .exam-card.cleared {
       border-color: var(--success);
@@ -177,18 +174,19 @@
     }
     .exam-status {
       font-size: 0.75rem;
-      padding: 2px 6px;
+      padding: 3px 8px;
       border-radius: 3px;
       display: inline-block;
       align-self: flex-start;
+      font-weight: bold;
     }
     .status-required {
-      background: rgba(255, 71, 87, 0.2);
+      background: rgba(255, 71, 87, 0.15);
       color: var(--danger);
       border: 1px solid var(--danger);
     }
     .status-optional {
-      background: rgba(236, 204, 104, 0.2);
+      background: rgba(255, 165, 2, 0.15);
       color: var(--warning);
       border: 1px solid var(--warning);
     }
@@ -198,30 +196,32 @@
       border: 1px solid var(--success);
     }
 
-    /* 合格通知バナー */
+    /* 合格バナー */
     .success-banner {
-      background: rgba(46, 213, 115, 0.12);
+      background: rgba(46, 213, 115, 0.1);
       border: 1px solid var(--success);
       border-radius: 6px;
-      padding: 16px;
-      margin-top: 20px;
+      padding: 20px;
+      margin-top: 24px;
       text-align: center;
+      animation: fadeIn 0.4s ease;
     }
     .credentials-box {
-      margin-top: 12px;
-      padding: 10px;
-      background: #000;
+      margin-top: 14px;
+      padding: 12px 20px;
+      background: #020406;
       border: 1px dashed var(--accent);
       border-radius: 4px;
       display: inline-block;
-      letter-spacing: 0.1rem;
+      letter-spacing: 0.12rem;
     }
 
     /* モーダル */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.8);
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(4px);
       display: none;
       align-items: center;
       justify-content: center;
@@ -235,47 +235,52 @@
       background: var(--panel);
       border: 1px solid var(--accent);
       border-radius: 8px;
-      max-width: 600px;
+      max-width: 640px;
       width: 100%;
       padding: 24px;
       max-height: 90vh;
       overflow-y: auto;
-      box-shadow: 0 0 25px rgba(0, 255, 204, 0.2);
+      box-shadow: 0 0 30px rgba(0, 255, 204, 0.25);
     }
 
-    /* ポップアップ削除試験のスタイル */
+    /* ② ポップアップ削除試験エリア */
     .popup-stage {
       position: relative;
-      height: 320px;
-      background: #06090e;
-      border: 1px solid var(--panel-border);
+      height: 340px;
+      background: #040609;
+      border: 1px solid #1f2d3d;
       border-radius: 6px;
       overflow: hidden;
-      margin: 12px 0;
+      margin: 16px 0;
     }
     .test-popup {
       position: absolute;
-      width: 220px;
-      padding: 14px;
-      background: #192330;
-      border: 2px solid #384e68;
+      width: 250px;
+      padding: 16px;
+      background: #141c27; /* 初期は完全に不透明 */
+      border: 2px solid #33475b;
       border-radius: 6px;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.6);
-      transition: all 0.3s ease;
-      color: var(--text);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.8);
+      transition: background 0.3s ease, border-color 0.3s ease;
     }
+    /* 消去されたポップアップ：背景完全透過＋文字・枠線・吹き出しは残る */
     .test-popup.cleared {
-      background: rgba(0, 255, 204, 0.08) !important;
-      border: 1px dashed var(--accent) !important;
-      backdrop-filter: blur(0px);
-      box-shadow: none;
-      pointer-events: none;
+      background: transparent !important;
+      border: 1px dashed rgba(0, 255, 204, 0.7) !important;
+      box-shadow: none !important;
     }
-    .speech-bubble {
+    .popup-bubble {
+      margin-top: 8px;
+      padding: 6px 10px;
+      background: rgba(0, 255, 204, 0.15);
+      border: 1px solid var(--accent);
+      border-radius: 12px 12px 12px 2px;
       font-size: 0.8rem;
       color: var(--accent);
-      text-align: center;
       font-weight: bold;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
 
     /* 内部ポータル (ダッシュボード) */
@@ -286,7 +291,7 @@
       margin-bottom: 20px;
     }
     .nav-tab {
-      padding: 10px 16px;
+      padding: 10px 18px;
       background: none;
       border: none;
       color: var(--text-muted);
@@ -317,16 +322,17 @@
       background: #090e15;
       border: 1px solid var(--panel-border);
       border-radius: 6px;
-      padding: 12px;
+      padding: 14px;
     }
     .post-meta {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       color: var(--accent);
-      margin-bottom: 4px;
+      font-weight: bold;
+      margin-bottom: 6px;
     }
     .post-body {
       font-size: 0.95rem;
-      line-height: 1.5;
+      line-height: 1.6;
     }
 
     /* チャット受信トースト通知 */
@@ -334,12 +340,12 @@
       position: fixed;
       bottom: 24px;
       right: 24px;
-      background: #112233;
+      background: #0c1824;
       border: 1px solid var(--accent);
       color: var(--accent);
       padding: 16px 20px;
       border-radius: 8px;
-      box-shadow: 0 4px 20px rgba(0, 255, 204, 0.4);
+      box-shadow: 0 4px 20px rgba(0, 255, 204, 0.45);
       display: none;
       z-index: 2000;
       animation: slideUp 0.3s ease;
@@ -348,6 +354,10 @@
       from { transform: translateY(30px); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
     }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
   </style>
 </head>
 <body>
@@ -355,13 +365,13 @@
   <div class="container">
     <header>
       <h1 class="brand-title">ディメンション</h1>
-      <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">DIMENSION INTERNAL VERIFICATION PORTAL</p>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 6px; letter-spacing: 0.1rem;">DIMENSION INTERNAL VERIFICATION PORTAL</p>
     </header>
 
     <!-- 画面1: トップ画面 -->
     <div id="screen-top" class="screen active">
-      <div class="panel" style="text-align: center; padding: 40px 20px;">
-        <p style="margin-bottom: 24px; color: var(--text-muted); font-size: 1.05rem;">
+      <div class="panel" style="text-align: center; padding: 48px 20px;">
+        <p style="margin-bottom: 28px; color: var(--text-muted); font-size: 1.05rem; line-height: 1.7;">
           ディメンション管理機構へようこそ。<br>進行する項目を選択してください。
         </p>
         <div class="btn-group">
@@ -374,8 +384,8 @@
     <!-- 画面2: ログイン画面 -->
     <div id="screen-login" class="screen">
       <div class="panel" style="max-width: 440px; margin: 0 auto;">
-        <h2 style="margin-bottom: 16px; font-size: 1.3rem; text-align: center;">システムアクセス</h2>
-        <div id="login-error" style="color: var(--danger); font-size: 0.85rem; margin-bottom: 12px; display: none;"></div>
+        <h2 style="margin-bottom: 18px; font-size: 1.3rem; text-align: center; color: var(--accent);">システムアクセス</h2>
+        <div id="login-error" style="color: var(--danger); font-size: 0.85rem; margin-bottom: 14px; display: none;"></div>
         
         <div class="form-group">
           <label>ID</label>
@@ -386,7 +396,7 @@
           <input type="password" id="login-pass" placeholder="パスワードを入力">
         </div>
         
-        <div class="btn-group" style="margin-top: 20px;">
+        <div class="btn-group" style="margin-top: 22px;">
           <button class="btn btn-primary" style="flex: 1;" onclick="handleLogin()">アクセス</button>
           <button class="btn" onclick="showScreen('screen-top')">戻る</button>
         </div>
@@ -396,11 +406,11 @@
     <!-- 画面3: 入社試験一覧画面 -->
     <div id="screen-exams" class="screen">
       <div class="panel">
-        <h2 style="font-size: 1.3rem; margin-bottom: 8px;">適性採用評価プロトコル</h2>
-        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px;">
+        <h2 style="font-size: 1.3rem; margin-bottom: 8px; color: var(--accent);">適性採用評価プロトコル</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; margin-bottom: 20px;">
           こちらにある、様々な入社試験をクリアし、規定ポイントを獲得すると、入社できます。<br>
           ※ <strong style="color: var(--danger);">必須試験（2項目）は全てクリア</strong>する必要があります。<br>
-          ※ 必須試験2項目＋任意試験1項目以上の<strong>合計3項目</strong>をクリアすると合格となります。
+          ※ 必須試験2項目＋任意試験1項目以上の<strong>合計3項目</strong>をクリアすると入社が認められます。
         </p>
 
         <!-- 必須試験 -->
@@ -469,9 +479,9 @@
           </div>
         </div>
 
-        <!-- 合格バナー (条件達成時に表示) -->
+        <!-- 合格バナー -->
         <div id="pass-banner" class="success-banner" style="display: none;">
-          <h3 style="color: var(--success); font-size: 1.2rem; margin-bottom: 6px;">
+          <h3 style="color: var(--success); font-size: 1.25rem; margin-bottom: 6px;">
             あなたは規定数に達したので入社を認めます
           </h3>
           <p style="font-size: 0.9rem; color: var(--text-muted);">
@@ -497,7 +507,7 @@
             <span style="font-size: 0.8rem; color: var(--text-muted);">アクセス認証:</span>
             <span id="portal-user-badge" style="font-weight: bold; margin-left: 6px;"></span>
           </div>
-          <button class="btn btn-danger" style="padding: 4px 10px; font-size: 0.8rem;" onclick="logout()">ログアウト</button>
+          <button class="btn btn-danger" style="padding: 4px 12px; font-size: 0.8rem;" onclick="logout()">ログアウト</button>
         </div>
 
         <!-- タブ切り替え -->
@@ -514,12 +524,12 @@
           <!-- 日比谷案件 -->
           <div class="panel" style="background: #090e15; border-color: #233446; margin-bottom: 14px;">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
-              <h3 style="font-size: 1.1rem; color: var(--accent);">確認作業:日比谷</h3>
+              <h3 style="font-size: 1.15rem; color: var(--accent);">確認作業:日比谷</h3>
               <span id="hibiya-capacity-badge" style="font-size: 0.8rem; padding: 2px 8px; border-radius: 4px; background: rgba(0,255,204,0.1); border: 1px solid var(--accent); color: var(--accent);">
                 残り1名
               </span>
             </div>
-            <p style="font-size: 0.9rem; line-height: 1.5; color: var(--text); margin-bottom: 14px;">
+            <p style="font-size: 0.9rem; line-height: 1.6; color: var(--text); margin-bottom: 14px;">
               日比谷で計画の一部となる重要な案件がある。チラシは既に配布済なので、それを元に作業をしてほしい。
             </p>
             
@@ -552,9 +562,9 @@
 
         <!-- タブ2: 掲示板 -->
         <div id="tab-board" class="tab-content">
-          <!-- 一般ユーザー向け：閲覧不可表示 -->
-          <div id="board-restricted" style="text-align: center; padding: 40px 10px;">
-            <p style="color: var(--danger); font-size: 1.05rem; letter-spacing: 0.05rem; font-weight: bold;">
+          <!-- 一般ユーザー向け -->
+          <div id="board-restricted" style="text-align: center; padding: 48px 10px;">
+            <p style="color: var(--danger); font-size: 1.1rem; letter-spacing: 0.05rem; font-weight: bold;">
               【幹部以外には閲覧権限がありません】
             </p>
             <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 8px;">
@@ -562,34 +572,34 @@
             </p>
           </div>
 
-          <!-- 幹部ユーザー向け：発言ログ表示 -->
+          <!-- 幹部ユーザー向け -->
           <div id="board-executive" style="display: none;">
             <p style="font-size: 0.85rem; color: var(--accent); margin-bottom: 14px;">
               最高幹部 暗号化セキュア通信チャネル
             </p>
             <div class="board-log">
               <div class="post-item">
-                <div class="post-meta">田中 (ID:AKANAT)</div>
+                <div class="post-meta">田中(ID:AKANAT)</div>
                 <div class="post-body">どうやら神田のスマホが無くなったようだ</div>
               </div>
               <div class="post-item">
-                <div class="post-meta">山本 (ID:OTOMAMAY)</div>
+                <div class="post-meta">山本(ID:OTOMAMAY)</div>
                 <div class="post-body">あいつのスマホ、裏面にPASS書いてあるから、この掲示板を見られるかもしれない。</div>
               </div>
               <div class="post-item">
-                <div class="post-meta">白井 (ID:IARIHS)</div>
+                <div class="post-meta">白井(ID:IARIHS)</div>
                 <div class="post-body">核心的な話はしていないが念のため、あいつの掲示板書き込み機能は使えなくした</div>
               </div>
               <div class="post-item">
-                <div class="post-meta">山本 (ID:OTOMAMAY)</div>
+                <div class="post-meta">山本(ID:OTOMAMAY)</div>
                 <div class="post-body">侵入者は牢屋に入れました</div>
               </div>
               <div class="post-item">
-                <div class="post-meta">田中 (ID:AKANAT)</div>
+                <div class="post-meta">田中(ID:AKANAT)</div>
                 <div class="post-body">牢屋のパスワードは組織の記念日だったよな？</div>
               </div>
               <div class="post-item">
-                <div class="post-meta">白井 (ID:IARIHS)</div>
+                <div class="post-meta">白井(ID:IARIHS)</div>
                 <div class="post-body">そうだ。きちんとやっておけ。</div>
               </div>
             </div>
@@ -616,7 +626,7 @@
   <!-- 試験詳細モーダル -->
   <div id="exam-modal" class="modal-overlay">
     <div class="modal-box">
-      <h3 id="modal-title" style="font-size: 1.2rem; color: var(--accent); margin-bottom: 12px;"></h3>
+      <h3 id="modal-title" style="font-size: 1.25rem; color: var(--accent); margin-bottom: 12px;"></h3>
       <div id="modal-rules" style="font-size: 0.9rem; line-height: 1.6; color: #ccc; margin-bottom: 20px;"></div>
       <div id="modal-stage" style="display: none; margin-bottom: 20px; border-top: 1px solid var(--panel-border); padding-top: 16px;"></div>
       
@@ -634,41 +644,32 @@
   </div>
 
   <script>
-    // ==========================================
-    // アプリケーション状態管理
-    // ==========================================
     const STATE = {
       clearedExams: new Set(),
-      currentUserRole: null, // 'general' | 'executive'
+      currentUserRole: null,
       currentExamId: null,
       hibiyaApplied: false,
       fukuEscaped: false,
       isFukuTyping: false
     };
 
-    // 画面切り替え
     function showScreen(screenId) {
       document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
       const target = document.getElementById(screenId);
       if (target) target.classList.add('active');
     }
 
-    // ==========================================
-    // ログイン・セッション管理
-    // ==========================================
+    // ログイン処理 (ID: ADNAK / PASS: 2569)
     function handleLogin() {
       const id = document.getElementById('login-id').value.trim();
       const pass = document.getElementById('login-pass').value.trim();
       const errEl = document.getElementById('login-error');
       errEl.style.display = 'none';
 
-      // 幹部アカウント判定: ID: ADNAK / PASS: 2569
       if (id === 'ADNAK' && pass === '2569') {
         loginSuccess('executive');
         return;
       }
-
-      // 一般構成員アカウント判定: ID: DIM-7749 / PASS: NEXUS-X
       if (id === 'DIM-7749' && pass === 'NEXUS-X') {
         loginSuccess('general');
         return;
@@ -692,7 +693,7 @@
         badge.textContent = '最高幹部 (ADNAK)';
         badge.style.color = 'var(--danger)';
         
-        // 幹部は日比谷案件に応募しておらず、最初から残り0名
+        // 幹部は日比谷案件に応募しておらず、最初から0名
         hibiyaCap.textContent = '募集終了 (残り0名)';
         hibiyaCap.style.borderColor = '#555';
         hibiyaCap.style.color = '#888';
@@ -700,11 +701,9 @@
         hibiyaBtn.textContent = '応募終了';
         hibiyaDir.style.display = 'none';
 
-        // 幹部用掲示板を表示
         boardRestricted.style.display = 'none';
         boardExec.style.display = 'block';
 
-        // 幹部メモ初期テキスト（フク潜入メッセージ）
         if (!STATE.fukuEscaped) {
           memo.value = 'これ、誰か見てるっすか？俺はフクっす。\n今、ディメンションのアジトに潜入して色々探ってたんすけど、途中で捕まって今牢屋みたいなところにいるっす。\n\n牢屋のナンバーさえ分かれば脱出できるんすけど…。';
         }
@@ -712,7 +711,6 @@
         badge.textContent = '一般構成員 (DIM-7749)';
         badge.style.color = 'var(--accent)';
 
-        // 一般ユーザーの日比谷応募状態
         if (STATE.hibiyaApplied) {
           hibiyaCap.textContent = '残り0名 (応募済)';
           hibiyaCap.style.borderColor = 'var(--success)';
@@ -729,10 +727,8 @@
           hibiyaDir.style.display = 'none';
         }
 
-        // 掲示板は権限なし
         boardRestricted.style.display = 'block';
         boardExec.style.display = 'none';
-
         memo.value = '';
       }
 
@@ -760,7 +756,6 @@
       if (tabId === 'tab-memo') tabs[2]?.classList.add('active');
     }
 
-    // 日比谷案件への応募
     function applyHibiya() {
       if (STATE.currentUserRole !== 'general') return;
       STATE.hibiyaApplied = true;
@@ -777,16 +772,11 @@
       hibiyaDir.style.display = 'block';
     }
 
-    // ==========================================
-    // 幹部メモ: フク牢屋脱出ギミック (1007入力)
-    // ==========================================
+    // フク脱出 (1007入力)
     const memoArea = document.getElementById('memo-area');
-    memoArea.addEventListener('input', function(e) {
-      if (STATE.currentUserRole !== 'executive' || STATE.fukuEscaped || STATE.isFukuTyping) {
-        return;
-      }
+    memoArea.addEventListener('input', function() {
+      if (STATE.currentUserRole !== 'executive' || STATE.fukuEscaped || STATE.isFukuTyping) return;
 
-      // 半角・全角・漢数字の「1007」を検知
       const text = memoArea.value;
       const normalized = text
         .replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))
@@ -814,7 +804,6 @@
             triggerChatToast();
           }
         }
-
         setTimeout(typeNextChar, 400);
       }
     });
@@ -822,9 +811,7 @@
     function triggerChatToast() {
       const toast = document.getElementById('chat-toast');
       toast.style.display = 'block';
-      setTimeout(() => {
-        toast.style.display = 'none';
-      }, 5000);
+      setTimeout(() => { toast.style.display = 'none'; }, 5000);
     }
 
     // ==========================================
@@ -837,7 +824,7 @@
       },
       'req-2': {
         title: '【必須】第2試験：ポップアップ削除',
-        rules: '画面上に現れるポップアップを全て消去せよ。\nポップアップ内に記載されたカタカナ単語（または別サイト干渉ワード「トキメキ」）を下部の入力欄に入れて消去を実行せよ。背景が透過して背後の妨害情報が現れる。'
+        rules: '画面上に現れるポップアップを削除せよ。\nポップアップに含まれているカタカナを下に入力することで「ポップアップを消去しました」という吹き出しに変わり、文字や吹き出しは残るが背景が透過して、後ろの別のポップアップが見える。\n最終的に５つのポップアップを削除すればクリア。'
       },
       'opt-1': {
         title: '【任意】第1試験：論理暗号解読',
@@ -868,11 +855,8 @@
       stage.innerHTML = '';
 
       const btnStart = document.getElementById('btn-modal-start');
-      if (STATE.clearedExams.has(examId)) {
-        btnStart.textContent = 'クリア済み（再挑戦）';
-      } else {
-        btnStart.textContent = 'スタート';
-      }
+      btnStart.style.display = 'inline-block';
+      btnStart.textContent = STATE.clearedExams.has(examId) ? 'クリア済み（再挑戦）' : 'スタート';
 
       document.getElementById('exam-modal').classList.add('active');
     }
@@ -889,7 +873,6 @@
       document.getElementById('btn-modal-start').style.display = 'none';
 
       const examId = STATE.currentExamId;
-
       if (examId === 'req-1') initReq1(stage);
       else if (examId === 'req-2') initReq2(stage);
       else if (examId === 'opt-1') initOpt1(stage);
@@ -914,7 +897,7 @@
           <input type="text" id="req1-input" placeholder="記念日を入力" style="flex:1;">
           <button class="btn btn-primary" onclick="checkReq1()">回答</button>
         </div>
-        <div id="req1-hints" style="font-size:0.85rem; color:var(--warning); display:flex; flex-direction:column; gap:4px;"></div>
+        <div id="req1-hints" style="font-size:0.85rem; color:var(--warning); display:flex; flex-direction:column; gap:6px;"></div>
       `;
       renderReq1Hints();
     }
@@ -936,7 +919,6 @@
         .replace(/月/, '/')
         .replace(/日/, '');
 
-      // 10月7日の判定: 10/7, 10-7, 1007, 10/07
       if (norm === '10/7' || norm === '10-7' || norm === '1007' || norm === '10/07' || raw === '十月七日') {
         finishExam('req-1', '記念日確認クリア！');
       } else {
@@ -946,50 +928,71 @@
       }
     }
 
-    // 必須2: ポップアップ削除
+    // ② 必須2: ポップアップ削除 (5枚の重なり・透過・トキメキギミック)
     let popupsCleared = 0;
-    const popupData = [
-      { id: 1, word: 'トキメキ', title: '【外部割り込み警告】', top: 20, left: 30, z: 5 },
-      { id: 2, word: 'シグナル', title: '【通信パケット異常】', top: 90, left: 160, z: 4 },
-      { id: 3, word: 'アクセス', title: '【侵入者ブロック】', top: 40, left: 320, z: 3 },
-      { id: 4, word: 'コード',   title: '【暗号化要求】', top: 130, left: 60, z: 2 },
-      { id: 5, word: 'ターゲット', title: '【座標確認中】', top: 110, left: 260, z: 1 }
+    // 5枚のポップアップ設定（意図的に重なり合う位置・z-indexを指定）
+    const popupList = [
+      { id: 1, word: 'トキメキ', title: '【外部干渉シグナル】', desc: '別サイト連携ワード「トキメキ」を検知', top: 30, left: 40, z: 50 },
+      { id: 2, word: 'プロトコル', title: '【通信割り込み】', desc: '次世代プロトコルの暗号同期要求', top: 60, left: 140, z: 40 },
+      { id: 3, word: 'セキュリティ', title: '【アクセス制限】', desc: 'セキュリティ認証キーの整合性検証', top: 100, left: 80, z: 30 },
+      { id: 4, word: 'ネットワーク', title: '【帯域遮断警告】', desc: 'ネットワーク内への侵入者を検知', top: 130, left: 220, z: 20 },
+      { id: 5, word: 'システム', title: '【最終確認】', desc: 'システム中枢へのアクセス認可確認', top: 160, left: 120, z: 10 }
     ];
+
     function initReq2(stage) {
       popupsCleared = 0;
       stage.innerHTML = `
         <div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:8px;">
-          画面内のポップアップに書かれたカタカナ語を入力して消去してください（残り <span id="popup-count">5</span> 枚）
+          ポップアップ内のカタカナ語を入力して消去してください（消去数: <span id="popup-count" style="color:var(--accent); font-weight:bold;">0</span> / 5）
         </div>
         <div class="popup-stage" id="popup-stage"></div>
         <div style="display:flex; gap:8px;">
-          <input type="text" id="popup-input" placeholder="カタカナを入力 (例: トキメキ)" style="flex:1;">
+          <input type="text" id="popup-input" placeholder="ポップアップのカタカナを入力 (例: トキメキ)" style="flex:1;">
           <button class="btn btn-primary" onclick="checkReq2()">消去</button>
         </div>
       `;
+
       const stageBox = document.getElementById('popup-stage');
-      popupData.forEach(p => {
+      popupList.forEach(p => {
         const el = document.createElement('div');
         el.className = 'test-popup';
-        el.id = 'popup-item-' + p.id;
+        el.id = 'popup-node-' + p.id;
         el.style.top = p.top + 'px';
         el.style.left = p.left + 'px';
         el.style.zIndex = p.z;
         el.innerHTML = `
           <div style="font-size:0.75rem; color:var(--danger); font-weight:bold; margin-bottom:4px;">${p.title}</div>
-          <div style="font-size:0.9rem;">識別語: <strong style="color:var(--accent);">${p.word}</strong></div>
+          <div style="font-size:0.85rem; line-height:1.4; margin-bottom:4px;">${p.desc}</div>
+          <div style="font-size:0.85rem; color:var(--accent);">キーワード: <strong>${p.word}</strong></div>
+          <div class="bubble-slot"></div>
         `;
         stageBox.appendChild(el);
       });
+
+      // Enterキーでも消去可能に
+      document.getElementById('popup-input').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') checkReq2();
+      });
     }
+
     function checkReq2() {
       const input = document.getElementById('popup-input').value.trim();
       let matched = false;
-      popupData.forEach(p => {
-        const el = document.getElementById('popup-item-' + p.id);
+
+      popupList.forEach(p => {
+        const el = document.getElementById('popup-node-' + p.id);
         if (el && !el.classList.contains('cleared') && input === p.word) {
+          // 背景透過クラスを付与
           el.classList.add('cleared');
-          el.innerHTML = '<div class="speech-bubble">💭 ポップアップを消去しました</div>';
+          // 文字は残したまま「ポップアップを消去しました」の吹き出しを追加
+          const bubbleSlot = el.querySelector('.bubble-slot');
+          if (bubbleSlot) {
+            bubbleSlot.innerHTML = `
+              <div class="popup-bubble">
+                💬 ポップアップを消去しました
+              </div>
+            `;
+          }
           popupsCleared++;
           matched = true;
         }
@@ -997,13 +1000,14 @@
 
       if (matched) {
         document.getElementById('popup-input').value = '';
-        const remain = 5 - popupsCleared;
-        document.getElementById('popup-count').textContent = remain;
+        document.getElementById('popup-count').textContent = popupsCleared;
         if (popupsCleared >= 5) {
-          setTimeout(() => finishExam('req-2', '全てのポップアップを消去しました！'), 300);
+          setTimeout(() => {
+            finishExam('req-2', '5つのポップアップをすべて消去しました！');
+          }, 350);
         }
       } else {
-        alert('一致するポップアップが見つかりません。');
+        alert('該当するポップアップが見つかりません。カタカナを正確に入力してください。');
       }
     }
 
@@ -1137,7 +1141,7 @@
       }
     }
 
-    // 試験終了判定とクリア処理
+    // クリア判定
     function finishExam(examId, msg) {
       alert(msg);
       STATE.clearedExams.add(examId);
@@ -1156,12 +1160,12 @@
       checkPassCondition();
     }
 
-    // 合格条件判定 (必須2種すべて + 任意1種以上の計3種)
     function checkPassCondition() {
       const hasReq1 = STATE.clearedExams.has('req-1');
       const hasReq2 = STATE.clearedExams.has('req-2');
       const optCleared = ['opt-1', 'opt-2', 'opt-3', 'opt-4'].filter(id => STATE.clearedExams.has(id)).length;
 
+      // 必須2つ + 任意1つ以上の合計3つ以上
       if (hasReq1 && hasReq2 && optCleared >= 1) {
         const banner = document.getElementById('pass-banner');
         banner.style.display = 'block';
