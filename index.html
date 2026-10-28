@@ -257,13 +257,12 @@
       position: absolute;
       width: 250px;
       padding: 16px;
-      background: #141c27; /* 初期は完全に不透明 */
+      background: #141c27;
       border: 2px solid #33475b;
       border-radius: 6px;
       box-shadow: 0 8px 24px rgba(0,0,0,0.8);
       transition: all 0.25s ease;
     }
-    /* 削除されたポップアップ：背景・枠線・影を完全に透過 */
     .test-popup.cleared {
       background: transparent !important;
       border: none !important;
@@ -271,7 +270,6 @@
       pointer-events: none;
       padding: 0 !important;
     }
-    /* 吹き出しのみ表示 */
     .popup-bubble {
       display: inline-flex;
       align-items: center;
@@ -833,7 +831,7 @@
       },
       'req-2': {
         title: '【必須】第2試験：ポップアップ削除',
-        rules: '画面上に現れている5つのポップアップを削除せよ。\nポップアップに含まれているカタカナを下に入力することで削除ができる。'
+        rules: '画面上に現れている５つのポップアップを削除せよ。\nポップアップに含まれているカタカナを下に入力することで削除ができる。'
       },
       'opt-1': {
         title: '【任意】第1試験：論理暗号解読',
@@ -937,7 +935,7 @@
       }
     }
 
-    // ② 必須2: ポップアップ削除 (吹き出しのみを残して背景完全透過)
+    // ② 必須2: ポップアップ削除
     let popupsCleared = 0;
     const popupList = [
       { id: 1, word: 'ウマイ', title: '【美味しいごはん】', desc: '美味しいごはん。梅干しウマイよ！', top: 25, left: 35, z: 50 },
@@ -985,6 +983,15 @@
     function checkReq2() {
       const input = document.getElementById('popup-input').value.trim();
       let matched = false;
+
+      // 「トキメキ」が入力された際に localStorage へフラグを保存
+      if (input === 'トキメキ') {
+        try {
+          localStorage.setItem('tokimeki_flag', 'true');
+        } catch (e) {
+          console.warn('localStorage access failed:', e);
+        }
+      }
 
       popupList.forEach(p => {
         const el = document.getElementById('popup-node-' + p.id);
