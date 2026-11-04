@@ -33,66 +33,92 @@
       width: 0;
     }
 
-    /* 上部「ポップアップを消去しました」吹き出しのしっぽ（上向き） */
-    .bubble-tail-top::before {
-      content: '';
-      position: absolute;
-      top: -10px;
-      left: 36px;
-      border-width: 0 10px 10px;
-      border-style: solid;
-      border-color: transparent transparent #065f46 transparent;
-      display: block;
-      width: 0;
+    /* ============================================================= */
+    /* ポップアップ（入社試験「ポップアップ削除」と同じ見た目）        */
+    /* ============================================================= */
+    /* 広告枠：ページ内に固定配置（スクロールで動かない普通の要素） */
+    .popup-slot {
+      margin-bottom: 32px;
+      min-height: 40px;
     }
 
-    /* グローエフェクト */
-    .glow-ad {
-      box-shadow: 0 4px 25px rgba(244, 63, 94, 0.45), 0 0 15px rgba(236, 72, 153, 0.3);
+    .test-popup,
+    .popup-bubble,
+    .toast-notification {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .test-popup {
+      width: 250px;
+      max-width: calc(100vw - 32px);
+      padding: 16px;
+      background: #141c27;
+      border: 2px solid #33475b;
+      border-radius: 6px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);
+      color: #e6edf3;
+      transition: all 0.25s ease;
+    }
+    .test-popup .popup-title {
+      font-size: 0.75rem;
+      color: #ff4757;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+    .test-popup .popup-desc {
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+
+    .popup-bubble {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      background: rgba(0, 255, 204, 0.15);
+      border: 1.5px solid #00ffcc;
+      border-radius: 14px 14px 14px 2px;
+      font-size: 0.85rem;
+      color: #00ffcc;
+      font-weight: bold;
+      box-shadow: 0 2px 10px rgba(0, 255, 204, 0.25);
+      backdrop-filter: blur(2px);
+      animation: popIn 0.2s ease;
+    }
+    @keyframes popIn {
+      from { transform: scale(0.85); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    /* ============================================================= */
+    /* チャット受信トースト（入社試験ページと同じ見た目）             */
+    /* ============================================================= */
+    .toast-notification {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      max-width: calc(100vw - 48px);
+      background: #0c1824;
+      border: 1px solid #00ffcc;
+      color: #00ffcc;
+      padding: 16px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0, 255, 204, 0.45);
+      z-index: 2000;
+      animation: slideUp 0.3s ease;
+    }
+    .toast-notification strong {
+      display: block;
+      font-size: 0.95rem;
+      margin-bottom: 2px;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
     }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-pink-500 selection:text-white">
-
-  <!-- ============================================================= -->
-  <!-- サイト上部に常に表示されるポップアップ広告エリア -->
-  <!-- ============================================================= -->
-  <div id="topAdBanner" class="sticky top-0 z-50 w-full bg-gradient-to-r from-slate-950 via-rose-950 to-purple-950 border-b-2 border-rose-500 glow-ad px-4 py-3 sm:py-3.5 shadow-2xl transition-all duration-300">
-    <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-      <div class="flex items-center gap-3">
-        <span class="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-500 to-pink-500 flex items-center justify-center text-white text-lg shadow-md flex-shrink-0 animate-pulse">
-          <i class="fa-solid fa-heart"></i>
-        </span>
-        <div>
-          <div class="inline-block bg-rose-600 text-white text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wider mb-0.5">
-            Advertisement
-          </div>
-          <div class="text-white text-sm sm:text-base font-black tracking-wide leading-tight">
-            「最高のトキメキ映画体験を！ 詳しくはWEBで！」
-          </div>
-        </div>
-      </div>
-      <div class="flex items-center gap-2">
-        <button onclick="window.open('#', '_blank')" class="px-4 py-1.5 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-400 hover:to-pink-500 text-white text-xs font-bold rounded-lg shadow transition whitespace-nowrap">
-          詳しくはWEBで <i class="fa-solid fa-arrow-up-right-from-square ml-1"></i>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ============================================================= -->
-  <!-- ポップアップ消去後に上部に表示される吹き出し通知 -->
-  <!-- ============================================================= -->
-  <div id="clearedBubbleContainer" class="hidden sticky top-0 z-50 w-full bg-slate-900/95 backdrop-blur-md border-b border-emerald-500/50 py-3 px-4 shadow-lg">
-    <div class="max-w-4xl mx-auto flex items-center justify-start">
-      <!-- 吹き出し本体 -->
-      <div class="relative bg-emerald-900 border border-emerald-500 text-emerald-100 px-5 py-2.5 rounded-2xl shadow-md bubble-tail-top flex items-center">
-        <span class="text-sm font-bold tracking-wide">
-          ポップアップを消去しました
-        </span>
-      </div>
-    </div>
-  </div>
 
   <!-- ナビゲーションヘッダー -->
   <header class="bg-slate-900/80 backdrop-blur-sm border-b border-slate-800">
@@ -128,6 +154,26 @@
       </div>
     </div>
 
+    <!-- ============================================================= -->
+    <!-- 広告ポップアップ（入社試験のポップアップと同じデザイン／固定配置） -->
+    <!-- ============================================================= -->
+    <div class="popup-slot">
+      <!-- 通常時：ポップアップ -->
+      <div id="topAdBanner" class="test-popup">
+        <div class="popup-body">
+          <div class="popup-title">【広告】</div>
+          <div class="popup-desc">最高のトキメキ映画体験を！ 詳しくはWEBで！</div>
+        </div>
+      </div>
+
+      <!-- 消去後：吹き出し（ポップアップと同じ位置に表示） -->
+      <div id="clearedBubbleContainer" class="hidden">
+        <div class="popup-bubble">
+          💬 ポップアップを削除しました
+        </div>
+      </div>
+    </div>
+
     <!-- コメント吹き出し一覧（1列のみのシングルカラムレイアウト） -->
     <div class="mb-12">
       <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-6">
@@ -153,21 +199,9 @@
   <!-- ============================================================= -->
   <!-- 右下チャット通知ウィジェット (フラグが true の時のみ表示) -->
   <!-- ============================================================= -->
-  <div id="bottomChatWidget" class="hidden fixed bottom-6 right-6 z-50 flex items-end gap-3 max-w-sm animate-bounce-short">
-    <!-- チャット吹き出し本体 -->
-    <div class="relative bg-slate-900/95 border border-indigo-500/80 text-white px-4 py-3 rounded-2xl shadow-2xl backdrop-blur-md flex items-center gap-3">
-      <!-- 送信者アバター（マル） -->
-      <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold text-xs shadow-md flex-shrink-0">
-        マル
-      </div>
-      <!-- メッセージ内容 -->
-      <div class="flex flex-col">
-        <span class="text-xs font-bold text-indigo-300">マル</span>
-        <span class="text-sm font-semibold text-slate-100">ちょっといいですか？「できました」と送ってほしいです。</span>
-      </div>
-      <!-- 右下のしっぽ -->
-      <div class="absolute -bottom-2 right-6 w-0 h-0 border-x-8 border-x-transparent border-t-8 border-t-slate-900"></div>
-    </div>
+  <div id="bottomChatWidget" class="hidden toast-notification">
+    <strong>⚡ 受信メッセージ</strong>
+    マル：ちょっといいですか？「できました」と送ってほしいです。
   </div>
 
   <!-- JavaScript -->
@@ -227,9 +261,8 @@
     const STORAGE_KEY = 'tokimeki_flag';
     const ALT_STORAGE_KEY = 'tokumei_flag';
 
-    // フラグを判定して画面上部のポップアップ/吹き出し/右下チャットを切り替え
+    // フラグを判定してポップアップ/吹き出し/右下チャットを切り替え
     function checkTokimekiFlag() {
-      // tokimeki_flag または tokumei_flag のいずれかが true か判定
       const flag1 = localStorage.getItem(STORAGE_KEY);
       const flag2 = localStorage.getItem(ALT_STORAGE_KEY);
       const isFlagTrue = (flag1 === 'true' || flag1 === true || flag2 === 'true' || flag2 === true);
@@ -238,16 +271,12 @@
       const clearedBubble = document.getElementById('clearedBubbleContainer');
       const bottomChatWidget = document.getElementById('bottomChatWidget');
 
-      // フラグが true の場合
       if (isFlagTrue) {
-        // 上部の広告ポップアップを非表示
+        // ポップアップを消し、同じ位置に「削除しました」吹き出しを表示
         if (topAdBanner) topAdBanner.classList.add('hidden');
-        // 上部に「ポップアップを消去しました」吹き出しを表示
         if (clearedBubble) clearedBubble.classList.remove('hidden');
-        // 右下に「マル：ちょっといいですか？」チャットを表示
         if (bottomChatWidget) bottomChatWidget.classList.remove('hidden');
       } else {
-        // 未入力時は上部に広告ポップアップを常に表示
         if (topAdBanner) topAdBanner.classList.remove('hidden');
         if (clearedBubble) clearedBubble.classList.add('hidden');
         if (bottomChatWidget) bottomChatWidget.classList.add('hidden');
