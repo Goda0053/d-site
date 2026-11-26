@@ -2,7 +2,9 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#06090e">
+  <meta name="format-detection" content="telephone=no">
   <title>ディメンション</title>
   <style>
     :root {
@@ -23,25 +25,33 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Hiragino Sans", "Noto Sans JP", Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
+
+    html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 
     body {
       background-color: var(--bg);
       color: var(--text);
       min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 30px 16px;
+      padding-left: max(16px, env(safe-area-inset-left));
+      padding-right: max(16px, env(safe-area-inset-right));
+      padding-bottom: max(30px, env(safe-area-inset-bottom));
+      overflow-x: hidden;
     }
+    body.modal-open { overflow: hidden; }
 
     .container {
       width: 100%;
       max-width: 840px;
     }
 
-    /* タイトルヘッダー */
     header {
       text-align: center;
       margin-bottom: 28px;
@@ -54,8 +64,13 @@
       color: var(--accent);
       text-shadow: 0 0 16px rgba(0, 255, 204, 0.45);
     }
+    .brand-sub {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 6px;
+      letter-spacing: 0.1rem;
+    }
 
-    /* パネル共通 */
     .panel {
       background: var(--panel);
       border: 1px solid var(--panel-border);
@@ -65,25 +80,33 @@
       box-shadow: 0 6px 24px rgba(0, 0, 0, 0.55);
     }
 
-    /* ボタン共通 */
     .btn {
       display: inline-block;
       background: #14202e;
       color: var(--text);
       border: 1px solid #283e56;
       padding: 10px 20px;
+      min-height: 44px;
       border-radius: 4px;
       font-size: 0.95rem;
       cursor: pointer;
       transition: all 0.2s ease;
       text-align: center;
       text-decoration: none;
+      touch-action: manipulation;
     }
-    .btn:hover:not(:disabled) {
+    @media (hover: hover) {
+      .btn:hover:not(:disabled) {
+        background: var(--accent-dim);
+        border-color: var(--accent);
+        color: var(--accent);
+        box-shadow: 0 0 10px rgba(0, 255, 204, 0.25);
+      }
+    }
+    .btn:active:not(:disabled) {
       background: var(--accent-dim);
       border-color: var(--accent);
       color: var(--accent);
-      box-shadow: 0 0 10px rgba(0, 255, 204, 0.25);
     }
     .btn:disabled {
       opacity: 0.45;
@@ -101,6 +124,11 @@
       color: var(--danger);
       background: var(--danger-dim);
     }
+    .btn-sm {
+      padding: 6px 14px;
+      min-height: 36px;
+      font-size: 0.8rem;
+    }
 
     .btn-group {
       display: flex;
@@ -109,18 +137,10 @@
       flex-wrap: wrap;
     }
 
-    /* 画面切り替え */
-    .screen {
-      display: none;
-    }
-    .screen.active {
-      display: block;
-    }
+    .screen { display: none; }
+    .screen.active { display: block; }
 
-    /* フォーム要素 */
-    .form-group {
-      margin-bottom: 16px;
-    }
+    .form-group { margin-bottom: 16px; }
     .form-group label {
       display: block;
       margin-bottom: 6px;
@@ -134,7 +154,9 @@
       border-radius: 4px;
       padding: 12px 14px;
       color: var(--text);
-      font-size: 1rem;
+      font-size: 16px; /* iOSの自動ズーム防止 */
+      -webkit-appearance: none;
+      appearance: none;
     }
     input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
       outline: none;
@@ -142,10 +164,15 @@
       box-shadow: 0 0 10px rgba(0, 255, 204, 0.25);
     }
 
-    /* 試験一覧 */
-    .exam-category {
-      margin-bottom: 24px;
+    /* 入力欄＋ボタンの横並び */
+    .input-row {
+      display: flex;
+      gap: 8px;
     }
+    .input-row input { flex: 1; min-width: 0; }
+    .input-row .btn { flex-shrink: 0; }
+
+    .exam-category { margin-bottom: 24px; }
     .exam-category h3 {
       font-size: 1.1rem;
       margin-bottom: 14px;
@@ -154,7 +181,7 @@
     }
     .exam-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(min(230px, 100%), 1fr));
       gap: 14px;
     }
     .exam-card {
@@ -196,7 +223,6 @@
       border: 1px solid var(--success);
     }
 
-    /* 合格バナー */
     .success-banner {
       background: rgba(46, 213, 115, 0.1);
       border: 1px solid var(--success);
@@ -214,23 +240,25 @@
       border-radius: 4px;
       display: inline-block;
       letter-spacing: 0.12rem;
+      max-width: 100%;
+      word-break: break-all;
     }
+    .cred-sep { margin: 0 6px; }
 
     /* モーダル */
     .modal-overlay {
       position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
+      inset: 0;
       background: rgba(0, 0, 0, 0.85);
       backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
       display: none;
       align-items: center;
       justify-content: center;
       padding: 16px;
       z-index: 1000;
     }
-    .modal-overlay.active {
-      display: flex;
-    }
+    .modal-overlay.active { display: flex; }
     .modal-box {
       background: var(--panel);
       border: 1px solid var(--accent);
@@ -239,9 +267,13 @@
       width: 100%;
       padding: 24px;
       max-height: 90vh;
+      max-height: 90dvh;
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
       box-shadow: 0 0 30px rgba(0, 255, 204, 0.25);
     }
+    #modal-rules { white-space: pre-line; }
 
     /* ポップアップ削除試験エリア */
     .popup-stage {
@@ -256,6 +288,7 @@
     .test-popup {
       position: absolute;
       width: 250px;
+      max-width: 62%;
       padding: 16px;
       background: #141c27;
       border: 2px solid #33475b;
@@ -284,13 +317,72 @@
       box-shadow: 0 2px 10px rgba(0, 255, 204, 0.25);
       backdrop-filter: blur(2px);
       animation: popIn 0.2s ease;
+      white-space: nowrap;
     }
     @keyframes popIn {
       from { transform: scale(0.85); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
     }
 
-    /* 内部ポータル (ダッシュボード) */
+    /* 周波数スライダー */
+    input[type="range"] {
+      width: 100%;
+      height: 36px;
+      accent-color: var(--accent);
+      touch-action: pan-y;
+    }
+    .fine-tune {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .fine-tune .btn { padding: 8px 4px; }
+
+    /* シーケンス記憶パッド */
+    .pad-row {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+    .seq-pad {
+      width: 80px;
+      height: 80px;
+      background: #1a2736;
+      border-radius: 6px;
+      cursor: pointer;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* 反射神経 */
+    #reflex-box {
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* 内部ポータル */
+    .portal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--panel-border);
+      padding-bottom: 12px;
+    }
+    .job-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
     .nav-tabs {
       display: flex;
       gap: 8px;
@@ -299,26 +391,24 @@
     }
     .nav-tab {
       padding: 10px 18px;
+      min-height: 44px;
       background: none;
       border: none;
       color: var(--text-muted);
       cursor: pointer;
       font-size: 0.95rem;
       border-bottom: 2px solid transparent;
+      touch-action: manipulation;
+      white-space: nowrap;
     }
     .nav-tab.active {
       color: var(--accent);
       border-bottom: 2px solid var(--accent);
       font-weight: bold;
     }
-    .tab-content {
-      display: none;
-    }
-    .tab-content.active {
-      display: block;
-    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
 
-    /* 掲示板ログ */
     .board-log {
       display: flex;
       flex-direction: column;
@@ -342,7 +432,6 @@
       line-height: 1.6;
     }
 
-    /* チャット受信トースト通知 */
     .toast-notification {
       position: fixed;
       bottom: 24px;
@@ -365,6 +454,42 @@
       from { opacity: 0; }
       to { opacity: 1; }
     }
+
+    /* ===== スマホ向け ===== */
+    @media (max-width: 600px) {
+      body { padding-top: 20px; padding-bottom: max(20px, env(safe-area-inset-bottom)); }
+      header { margin-bottom: 20px; padding-bottom: 16px; }
+      h1.brand-title { font-size: 1.9rem; letter-spacing: 0.25rem; }
+      .brand-sub { font-size: 0.7rem; letter-spacing: 0.05rem; }
+
+      .panel { padding: 18px 14px; margin-bottom: 18px; }
+      .panel.panel-hero { padding: 36px 16px !important; }
+
+      .btn-group .btn { flex: 1 1 auto; }
+
+      .nav-tabs { gap: 0; }
+      .nav-tab { flex: 1; padding: 10px 4px; font-size: 0.9rem; }
+
+      .modal-overlay { padding: 10px; align-items: flex-start; }
+      .modal-box { padding: 18px 14px; max-height: calc(100dvh - 20px); margin-top: env(safe-area-inset-top); }
+
+      .popup-stage { height: 330px; }
+      .test-popup { padding: 10px; }
+
+      .credentials-box { padding: 10px 12px; letter-spacing: 0.06rem; }
+      .cred-sep { display: block; height: 4px; overflow: hidden; color: transparent; }
+
+      .toast-notification {
+        left: 16px;
+        right: 16px;
+        bottom: max(16px, env(safe-area-inset-bottom));
+      }
+    }
+
+    @media (max-width: 360px) {
+      h1.brand-title { font-size: 1.6rem; letter-spacing: 0.15rem; }
+      .seq-pad { width: 70px; height: 70px; }
+    }
   </style>
 </head>
 <body>
@@ -372,12 +497,12 @@
   <div class="container">
     <header>
       <h1 class="brand-title">ディメンション</h1>
-      <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 6px; letter-spacing: 0.1rem;">DIMENSION INTERNAL VERIFICATION PORTAL</p>
+      <p class="brand-sub">DIMENSION INTERNAL VERIFICATION PORTAL</p>
     </header>
 
     <!-- 画面1: トップ画面 -->
     <div id="screen-top" class="screen active">
-      <div class="panel" style="text-align: center; padding: 48px 20px;">
+      <div class="panel panel-hero" style="text-align: center; padding: 48px 20px;">
         <p style="margin-bottom: 28px; color: var(--text-muted); font-size: 1.05rem; line-height: 1.7;">
           ディメンション管理機構へようこそ。<br>進行する項目を選択してください。
         </p>
@@ -393,16 +518,16 @@
       <div class="panel" style="max-width: 440px; margin: 0 auto;">
         <h2 style="margin-bottom: 18px; font-size: 1.3rem; text-align: center; color: var(--accent);">システムアクセス</h2>
         <div id="login-error" style="color: var(--danger); font-size: 0.85rem; margin-bottom: 14px; display: none;"></div>
-        
+
         <div class="form-group">
-          <label>ID</label>
-          <input type="text" id="login-id" placeholder="IDを入力" autocomplete="off">
+          <label for="login-id">ID</label>
+          <input type="text" id="login-id" placeholder="IDを入力" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" enterkeyhint="next">
         </div>
         <div class="form-group">
-          <label>PASS</label>
-          <input type="password" id="login-pass" placeholder="パスワードを入力">
+          <label for="login-pass">PASS</label>
+          <input type="password" id="login-pass" placeholder="パスワードを入力" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go">
         </div>
-        
+
         <div class="btn-group" style="margin-top: 22px;">
           <button class="btn btn-primary" style="flex: 1;" onclick="handleLogin()">アクセス</button>
           <button class="btn" onclick="showScreen('screen-top')">戻る</button>
@@ -420,7 +545,6 @@
           ※ 必須試験2項目＋任意試験1項目以上の<strong>合計3項目</strong>をクリアすると入社が認められます。
         </p>
 
-        <!-- 必須試験 -->
         <div class="exam-category">
           <h3 style="color: var(--danger); border-color: var(--danger);">必須試験（全2問 必達）</h3>
           <div class="exam-grid">
@@ -444,7 +568,6 @@
           </div>
         </div>
 
-        <!-- 任意試験 -->
         <div class="exam-category">
           <h3 style="color: var(--warning); border-color: var(--warning);">任意試験（いずれか1つ以上クリア）</h3>
           <div class="exam-grid">
@@ -486,20 +609,17 @@
           </div>
         </div>
 
-        <!-- 合格バナー -->
         <div id="pass-banner" class="success-banner" style="display: none;">
-          <h3 style="color: var(--success); font-size: 1.25rem; margin-bottom: 6px;">
+          <h3 style="color: var(--success); font-size: 1.15rem; margin-bottom: 6px; line-height: 1.5;">
             あなたは規定数に達したので入社を認めます
           </h3>
           <p style="font-size: 0.9rem; color: var(--text-muted);">
             下記のアカウント情報を用いてシステムにログインしてください。
           </p>
           <div class="credentials-box">
-            <strong>ID:</strong> <span style="color: var(--accent);">DIM-7749</span> &nbsp;|&nbsp; 
-            <strong>PASS:</strong> <span style="color: var(--accent);">NEXUS-X</span>
+            <strong>ID:</strong> <span style="color: var(--accent);">DIM-7749</span><span class="cred-sep">|</span><strong>PASS:</strong> <span style="color: var(--accent);">NEXUS-X</span>
           </div>
 
-          <!-- ★ 追加：ID/PASSを自動入力してログイン画面へ進むボタン -->
           <div style="margin-top: 16px;">
             <button class="btn btn-primary" style="box-shadow: 0 0 14px rgba(0, 255, 204, 0.4);" onclick="fillCredentialsAndGoLogin()">
               🔓 このアカウントでログイン画面へ進む
@@ -516,15 +636,14 @@
     <!-- 画面4: ポータル画面（ログイン後） -->
     <div id="screen-portal" class="screen">
       <div class="panel">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--panel-border); padding-bottom: 12px;">
+        <div class="portal-head">
           <div>
             <span style="font-size: 0.8rem; color: var(--text-muted);">アクセス認証:</span>
             <span id="portal-user-badge" style="font-weight: bold; margin-left: 6px;"></span>
           </div>
-          <button class="btn btn-danger" style="padding: 4px 12px; font-size: 0.8rem;" onclick="logout()">ログアウト</button>
+          <button class="btn btn-danger btn-sm" onclick="logout()">ログアウト</button>
         </div>
 
-        <!-- タブ切り替え -->
         <div class="nav-tabs">
           <button class="nav-tab active" onclick="switchTab('tab-jobs')">仕事募集中</button>
           <button class="nav-tab" onclick="switchTab('tab-board')">掲示板</button>
@@ -534,10 +653,9 @@
         <!-- タブ1: 仕事募集中 -->
         <div id="tab-jobs" class="tab-content active">
           <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 16px;">現在発令されている作戦一覧</p>
-          
-          <!-- 日比谷案件 -->
+
           <div class="panel" style="background: #090e15; border-color: #233446; margin-bottom: 14px;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+            <div class="job-head">
               <h3 style="font-size: 1.15rem; color: var(--accent);">確認作業:日比谷</h3>
               <span id="hibiya-capacity-badge" style="font-size: 0.8rem; padding: 2px 8px; border-radius: 4px; background: rgba(0,255,204,0.1); border: 1px solid var(--accent); color: var(--accent);">
                 残り1名
@@ -546,10 +664,9 @@
             <p style="font-size: 0.9rem; line-height: 1.6; color: var(--text); margin-bottom: 14px;">
               日比谷で計画の一部となる重要な案件がある。チラシは既に配布済なので、それを元に作業をしてほしい。
             </p>
-            
+
             <button id="btn-apply-hibiya" class="btn btn-primary" onclick="applyHibiya()">応募する</button>
 
-            <!-- 応募完了後の指令表示エリア -->
             <div id="hibiya-directive" style="display: none; margin-top: 16px; padding: 14px; background: #06090e; border: 1px solid var(--accent); border-radius: 4px;">
               <p style="color: var(--success); font-weight: bold; margin-bottom: 8px;">【応募を受理しました】</p>
               <div style="font-size: 0.9rem; line-height: 1.7; color: #d1d5db; white-space: pre-wrap;">こちらは、とある計画のために必須となる作戦です。
@@ -562,9 +679,8 @@
             </div>
           </div>
 
-          <!-- ダミー案件 -->
           <div class="panel" style="background: #090e15; border-color: #233446; opacity: 0.6;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+            <div class="job-head">
               <h4 style="font-size: 1rem;">通信アンテナ補修:秋葉原</h4>
               <span style="font-size: 0.8rem; padding: 2px 8px; border-radius: 4px; border: 1px solid #555; color: #888;">募集終了 (残り0名)</span>
             </div>
@@ -576,7 +692,6 @@
 
         <!-- タブ2: 掲示板 -->
         <div id="tab-board" class="tab-content">
-          <!-- 一般ユーザー向け -->
           <div id="board-restricted" style="text-align: center; padding: 48px 10px;">
             <p style="color: var(--danger); font-size: 1.1rem; letter-spacing: 0.05rem; font-weight: bold;">
               【幹部以外には閲覧権限がありません】
@@ -586,7 +701,6 @@
             </p>
           </div>
 
-          <!-- 幹部ユーザー向け -->
           <div id="board-executive" style="display: none;">
             <p style="font-size: 0.85rem; color: var(--accent); margin-bottom: 14px;">
               最高幹部 暗号化セキュア通信チャネル
@@ -640,10 +754,10 @@
   <!-- 試験詳細モーダル -->
   <div id="exam-modal" class="modal-overlay">
     <div class="modal-box">
-      <h3 id="modal-title" style="font-size: 1.25rem; color: var(--accent); margin-bottom: 12px;"></h3>
+      <h3 id="modal-title" style="font-size: 1.2rem; color: var(--accent); margin-bottom: 12px;"></h3>
       <div id="modal-rules" style="font-size: 0.9rem; line-height: 1.6; color: #ccc; margin-bottom: 20px;"></div>
       <div id="modal-stage" style="display: none; margin-bottom: 20px; border-top: 1px solid var(--panel-border); padding-top: 16px;"></div>
-      
+
       <div id="modal-actions" class="btn-group">
         <button id="btn-modal-start" class="btn btn-primary" onclick="startCurrentExam()">スタート</button>
         <button class="btn" onclick="closeExamModal()">閉じる</button>
@@ -667,34 +781,47 @@
       isFukuTyping: false
     };
 
+    // Enterキー送信（日本語入力の変換確定Enterは無視）
+    function onEnter(el, fn) {
+      if (!el) return;
+      el.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.isComposing && e.keyCode !== 229) {
+          e.preventDefault();
+          fn();
+        }
+      });
+    }
+
     function showScreen(screenId) {
       document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
       const target = document.getElementById(screenId);
       if (target) target.classList.add('active');
+      window.scrollTo(0, 0);
     }
 
-    // ★ 追加：IDとPASSを自動入力してログイン画面を開く関数
     function fillCredentialsAndGoLogin() {
       document.getElementById('login-id').value = 'DIM-7749';
       document.getElementById('login-pass').value = 'NEXUS-X';
       document.getElementById('login-error').style.display = 'none';
       showScreen('screen-login');
-      // ログイン入力欄へスムーズにスクロール
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // ログイン処理 (ID: ADNAK / PASS: 2569)
+    onEnter(document.getElementById('login-id'), () => document.getElementById('login-pass').focus());
+    onEnter(document.getElementById('login-pass'), () => handleLogin());
+
     function handleLogin() {
-      const id = document.getElementById('login-id').value.trim();
+      const id = document.getElementById('login-id').value.trim().toUpperCase();
       const pass = document.getElementById('login-pass').value.trim();
       const errEl = document.getElementById('login-error');
       errEl.style.display = 'none';
 
       if (id === 'ADNAK' && pass === '2569') {
+        document.activeElement && document.activeElement.blur();
         loginSuccess('executive');
         return;
       }
       if (id === 'DIM-7749' && pass === 'NEXUS-X') {
+        document.activeElement && document.activeElement.blur();
         loginSuccess('general');
         return;
       }
@@ -717,7 +844,7 @@
       if (role === 'executive') {
         badge.textContent = '最高幹部 (ADNAK)';
         badge.style.color = 'var(--danger)';
-        
+
         hibiyaCap.textContent = '募集終了 (残り0名)';
         hibiyaCap.style.borderColor = '#555';
         hibiyaCap.style.color = '#888';
@@ -770,7 +897,7 @@
     function switchTab(tabId) {
       document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      
+
       const targetContent = document.getElementById(tabId);
       if (targetContent) targetContent.classList.add('active');
 
@@ -794,11 +921,12 @@
       hibiyaBtn.disabled = true;
       hibiyaBtn.textContent = '応募済み';
       hibiyaDir.style.display = 'block';
+      hibiyaDir.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
     // フク脱出 (1007入力)
     const memoArea = document.getElementById('memo-area');
-    memoArea.addEventListener('input', function() {
+    function checkFuku() {
       if (STATE.currentUserRole !== 'executive' || STATE.fukuEscaped || STATE.isFukuTyping) return;
 
       const text = memoArea.value;
@@ -810,6 +938,7 @@
         STATE.fukuEscaped = true;
         STATE.isFukuTyping = true;
         memoArea.readOnly = true;
+        memoArea.blur();
         document.getElementById('memo-lock-msg').style.display = 'block';
 
         const replyLines = "\n\n「それがナンバー…？\nおっ、1007で牢屋から出ることができたっす！\n今から他のみんなと合流するっす」";
@@ -830,7 +959,9 @@
         }
         setTimeout(typeNextChar, 400);
       }
-    });
+    }
+    memoArea.addEventListener('input', checkFuku);
+    memoArea.addEventListener('compositionend', checkFuku); // スマホの日本語入力確定時
 
     function triggerChatToast() {
       const toast = document.getElementById('chat-toast');
@@ -856,7 +987,7 @@
       },
       'opt-2': {
         title: '【任意】第2試験：反射神経同期',
-        rules: '下のパネルが【赤から緑】に変化した瞬間にトリガーをクリックせよ。フライングは無効となる。'
+        rules: '下のパネルが【赤から緑】に変化した瞬間にトリガーをタップせよ。フライングは無効となる。'
       },
       'opt-3': {
         title: '【任意】第3試験：周波数同調',
@@ -864,7 +995,7 @@
       },
       'opt-4': {
         title: '【任意】第4試験：シーケンス記憶',
-        rules: '3つのパネルが順番に青く光る。その光った順番通りにパネルをクリックして再現せよ。'
+        rules: '3つのパネルが順番に青く光る。その光った順番通りにパネルをタップして再現せよ。'
       }
     };
 
@@ -883,11 +1014,16 @@
       btnStart.textContent = STATE.clearedExams.has(examId) ? 'クリア済み（再挑戦）' : 'スタート';
 
       document.getElementById('exam-modal').classList.add('active');
+      document.querySelector('#exam-modal .modal-box').scrollTop = 0;
+      document.body.classList.add('modal-open');
     }
 
     function closeExamModal() {
+      clearTimeout(reflexTimeout);
+      reflexStartTime = 0;
       document.getElementById('exam-modal').classList.remove('active');
       document.getElementById('modal-stage').innerHTML = '';
+      document.body.classList.remove('modal-open');
     }
 
     function startCurrentExam() {
@@ -917,12 +1053,13 @@
     function initReq1(stage) {
       stage.innerHTML = `
         <div style="font-size:0.9rem; margin-bottom:12px;">ディメンションの設立記念日を入力してください (4桁で)</div>
-        <div style="display:flex; gap:8px; margin-bottom:12px;">
-          <input type="text" id="req1-input" placeholder="記念日を入力" style="flex:1;">
+        <div class="input-row" style="margin-bottom:12px;">
+          <input type="text" id="req1-input" placeholder="記念日を入力" inputmode="numeric" autocomplete="off" enterkeyhint="done">
           <button class="btn btn-primary" onclick="checkReq1()">回答</button>
         </div>
         <div id="req1-hints" style="font-size:0.85rem; color:var(--warning); display:flex; flex-direction:column; gap:6px;"></div>
       `;
+      onEnter(document.getElementById('req1-input'), checkReq1);
       renderReq1Hints();
     }
     function renderReq1Hints() {
@@ -952,14 +1089,14 @@
       }
     }
 
-    // ② 必須2: ポップアップ削除
+    // 必須2: ポップアップ削除（位置は%指定でスマホ幅にも対応）
     let popupsCleared = 0;
     const popupList = [
-      { id: 1, word: 'ウマイ', title: '【美味しいごはん】', desc: '美味しいごはん。梅干しウマイよ！', top: 25, left: 35, z: 50 },
-      { id: 2, word: 'アクセス', title: '【通信制限】', desc: '通信が制限されています。アクセスできません。', top: 55, left: 135, z: 40 },
-      { id: 3, word: 'セキュリティ', title: '【セキュリティ制限】', desc: '認証の整合性検証', top: 95, left: 75, z: 30 },
-      { id: 4, word: 'ネットワーク', title: '【帯域遮断警告】', desc: 'ネットワーク内への侵入者を検知', top: 125, left: 215, z: 20 },
-      { id: 5, word: 'システム', title: '【最終確認】', desc: 'システム中枢への認可確認', top: 155, left: 115, z: 10 }
+      { id: 1, word: 'ウマイ', title: '【美味しいごはん】', desc: '美味しいごはん。梅干しウマイよ！', top: 25, left: 6, z: 50 },
+      { id: 2, word: 'アクセス', title: '【通信制限】', desc: '通信が制限されています。アクセスできません。', top: 55, left: 23, z: 40 },
+      { id: 3, word: 'セキュリティ', title: '【セキュリティ制限】', desc: '認証の整合性検証', top: 95, left: 13, z: 30 },
+      { id: 4, word: 'ネットワーク', title: '【帯域遮断警告】', desc: 'ネットワーク内への侵入者を検知', top: 125, left: 36, z: 20 },
+      { id: 5, word: 'システム', title: '【最終確認】', desc: 'システム中枢への認可確認', top: 155, left: 19, z: 10 }
     ];
 
     function initReq2(stage) {
@@ -969,8 +1106,8 @@
           ポップアップ内のカタカナ語を入力して消去してください（消去数: <span id="popup-count" style="color:var(--accent); font-weight:bold;">0</span> / 5）
         </div>
         <div class="popup-stage" id="popup-stage"></div>
-        <div style="display:flex; gap:8px;">
-          <input type="text" id="popup-input" placeholder="ポップアップのカタカナを入力" style="flex:1;">
+        <div class="input-row">
+          <input type="text" id="popup-input" placeholder="カタカナを入力" autocomplete="off" enterkeyhint="done">
           <button class="btn btn-primary" onclick="checkReq2()">消去</button>
         </div>
       `;
@@ -981,7 +1118,7 @@
         el.className = 'test-popup';
         el.id = 'popup-node-' + p.id;
         el.style.top = p.top + 'px';
-        el.style.left = p.left + 'px';
+        el.style.left = p.left + '%';
         el.style.zIndex = p.z;
         el.innerHTML = `
           <div class="popup-body">
@@ -992,16 +1129,13 @@
         stageBox.appendChild(el);
       });
 
-      document.getElementById('popup-input').addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') checkReq2();
-      });
+      onEnter(document.getElementById('popup-input'), checkReq2);
     }
 
     function checkReq2() {
       const input = document.getElementById('popup-input').value.trim();
       let matched = false;
 
-      // 「トキメキ」が入力された際に localStorage へフラグを保存
       if (input === 'トキメキ') {
         try {
           localStorage.setItem('tokimeki_flag', 'true');
@@ -1041,11 +1175,12 @@
     function initOpt1(stage) {
       stage.innerHTML = `
         <div style="font-size:0.9rem; margin-bottom:8px;">暗号文: <strong style="color:var(--accent);">EJNFOTJPO</strong></div>
-        <div style="display:flex; gap:8px;">
-          <input type="text" id="opt1-input" placeholder="復号された英単語を入力" style="flex:1; text-transform:uppercase;">
+        <div class="input-row">
+          <input type="text" id="opt1-input" placeholder="復号された英単語" style="text-transform:uppercase;" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" enterkeyhint="done">
           <button class="btn btn-primary" onclick="checkOpt1()">判定</button>
         </div>
       `;
+      onEnter(document.getElementById('opt1-input'), checkOpt1);
     }
     function checkOpt1() {
       const val = document.getElementById('opt1-input').value.trim().toUpperCase();
@@ -1056,55 +1191,72 @@
       }
     }
 
-    // 任意2: 反射神経同期
+    // 任意2: 反射神経同期（タッチの瞬間に反応するよう pointerdown を使用）
     let reflexTimeout = null;
     let reflexStartTime = 0;
     function initOpt2(stage) {
+      clearTimeout(reflexTimeout);
+      reflexStartTime = 0;
       stage.innerHTML = `
-        <div id="reflex-box" style="height:120px; background:#ff4757; display:flex; align-items:center; justify-content:center; border-radius:6px; cursor:pointer; font-weight:bold; font-size:1.1rem; color:#fff;" onclick="clickReflex()">
+        <div id="reflex-box" style="height:140px; background:#ff4757; display:flex; align-items:center; justify-content:center; border-radius:6px; cursor:pointer; font-weight:bold; font-size:1.1rem; color:#fff;">
           シグナル待機中...
         </div>
       `;
+      document.getElementById('reflex-box').addEventListener('pointerdown', function(e) {
+        e.preventDefault();
+        clickReflex();
+      });
       const delay = 1500 + Math.random() * 2000;
       reflexTimeout = setTimeout(() => {
         const box = document.getElementById('reflex-box');
         if (!box) return;
         box.style.background = '#2ed573';
-        box.textContent = '今すぐクリック！';
+        box.textContent = '今すぐタップ！';
         reflexStartTime = Date.now();
       }, delay);
     }
     function clickReflex() {
-      const box = document.getElementById('reflex-box');
       if (!reflexStartTime) {
         clearTimeout(reflexTimeout);
         alert('フライングです！早すぎます。');
         initOpt2(document.getElementById('modal-stage'));
       } else {
         const ms = Date.now() - reflexStartTime;
+        reflexStartTime = 0;
         if (ms < 800) {
           finishExam('opt-2', `反射神経同期クリア (${ms}ms)`);
         } else {
           alert(`反応時間: ${ms}ms - 規定の800msを超えています。再試行してください。`);
-          reflexStartTime = 0;
           initOpt2(document.getElementById('modal-stage'));
         }
       }
     }
 
-    // 任意3: 周波数同調
+    // 任意3: 周波数同調（スマホ用に微調整ボタンを追加）
     function initOpt3(stage) {
       stage.innerHTML = `
         <div style="margin-bottom:12px; font-size:0.9rem;">
           現在周波数: <span id="freq-display" style="color:var(--accent); font-weight:bold;">50.0</span> MHz
         </div>
-        <input type="range" id="freq-slider" min="0" max="1000" value="500" style="width:100%; margin-bottom:16px;" oninput="updateFreq(this.value)">
+        <input type="range" id="freq-slider" min="0" max="1000" value="500" style="margin-bottom:12px;" oninput="updateFreq(this.value)">
+        <div class="fine-tune">
+          <button class="btn" onclick="nudgeFreq(-10)">-1.0</button>
+          <button class="btn" onclick="nudgeFreq(-1)">-0.1</button>
+          <button class="btn" onclick="nudgeFreq(1)">+0.1</button>
+          <button class="btn" onclick="nudgeFreq(10)">+1.0</button>
+        </div>
         <button class="btn btn-primary" style="width:100%;" onclick="checkOpt3()">同調ロック</button>
       `;
     }
     function updateFreq(val) {
       const f = (val / 10).toFixed(1);
       document.getElementById('freq-display').textContent = f;
+    }
+    function nudgeFreq(delta) {
+      const slider = document.getElementById('freq-slider');
+      const v = Math.min(1000, Math.max(0, Number(slider.value) + delta));
+      slider.value = v;
+      updateFreq(v);
     }
     function checkOpt3() {
       const val = (document.getElementById('freq-slider').value / 10).toFixed(1);
@@ -1118,6 +1270,7 @@
     // 任意4: 記憶シーケンス
     let seqTarget = [];
     let seqUser = [];
+    let seqPlaying = false;
     function initOpt4(stage) {
       seqTarget = [
         Math.floor(Math.random() * 3),
@@ -1127,16 +1280,17 @@
       seqUser = [];
       stage.innerHTML = `
         <div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;">光る順序を記憶してください</div>
-        <div style="display:flex; gap:12px; justify-content:center; margin-bottom:12px;">
-          <div id="pad-0" style="width:70px; height:70px; background:#1a2736; border-radius:6px; cursor:pointer;" onclick="pressPad(0)"></div>
-          <div id="pad-1" style="width:70px; height:70px; background:#1a2736; border-radius:6px; cursor:pointer;" onclick="pressPad(1)"></div>
-          <div id="pad-2" style="width:70px; height:70px; background:#1a2736; border-radius:6px; cursor:pointer;" onclick="pressPad(2)"></div>
+        <div class="pad-row">
+          <div id="pad-0" class="seq-pad" onclick="pressPad(0)"></div>
+          <div id="pad-1" class="seq-pad" onclick="pressPad(1)"></div>
+          <div id="pad-2" class="seq-pad" onclick="pressPad(2)"></div>
         </div>
       `;
       playSequence();
     }
     function playSequence() {
       let step = 0;
+      seqPlaying = true;
       const interval = setInterval(() => {
         if (step < seqTarget.length) {
           const pad = document.getElementById('pad-' + seqTarget[step]);
@@ -1147,10 +1301,12 @@
           step++;
         } else {
           clearInterval(interval);
+          seqPlaying = false;
         }
       }, 650);
     }
     function pressPad(idx) {
+      if (seqPlaying) return; // 再生中の誤タップを防止
       const pad = document.getElementById('pad-' + idx);
       pad.style.background = 'var(--accent)';
       setTimeout(() => { pad.style.background = '#1a2736'; }, 200);
