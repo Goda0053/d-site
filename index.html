@@ -273,56 +273,69 @@
       overscroll-behavior: contain;
       box-shadow: 0 0 30px rgba(0, 255, 204, 0.25);
     }
-    #modal-rules { white-space: pre-line; }
+    #modal-rules { white-space: pre-line; word-break: break-all; }
 
-    /* ポップアップ削除試験エリア */
+    /* 言葉推測：ポップアップ削除エリア */
     .popup-stage {
       position: relative;
-      height: 350px;
+      height: 330px;
       background: #040609;
       border: 1px solid #1f2d3d;
       border-radius: 6px;
       overflow: hidden;
-      margin: 16px 0;
+      margin: 16px 0 10px;
+    }
+    /* ポップアップの下に隠された言葉 */
+    .hidden-word {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(64px, 26vw, 120px);
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      text-shadow: 0 0 18px rgba(0, 255, 204, 0.5);
+      user-select: none;
+      -webkit-user-select: none;
+      pointer-events: none;
+      z-index: 1;
     }
     .test-popup {
       position: absolute;
-      width: 250px;
-      max-width: 62%;
-      padding: 16px;
+      padding: 12px;
       background: #141c27;
       border: 2px solid #33475b;
       border-radius: 6px;
       box-shadow: 0 8px 24px rgba(0,0,0,0.8);
-      transition: all 0.25s ease;
+      transition: opacity 0.35s ease, transform 0.35s ease;
     }
-    .test-popup.cleared {
-      background: transparent !important;
-      border: none !important;
-      box-shadow: none !important;
+    .test-popup.removing {
+      opacity: 0;
+      transform: scale(0.9);
       pointer-events: none;
-      padding: 0 !important;
     }
-    .popup-bubble {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 14px;
-      background: rgba(0, 255, 204, 0.15);
-      border: 1.5px solid var(--accent);
-      border-radius: 14px 14px 14px 2px;
-      font-size: 0.85rem;
-      color: var(--accent);
+    /* 削除メッセージ */
+    .popup-msg {
+      min-height: 1.6em;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
       font-weight: bold;
-      box-shadow: 0 2px 10px rgba(0, 255, 204, 0.25);
-      backdrop-filter: blur(2px);
-      animation: popIn 0.2s ease;
-      white-space: nowrap;
+      color: var(--accent);
     }
+    .popup-msg.show { animation: popIn 0.25s ease; }
     @keyframes popIn {
-      from { transform: scale(0.85); opacity: 0; }
+      from { transform: scale(0.9); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
     }
+    .word-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .word-actions .btn { padding: 10px 6px; white-space: nowrap; }
 
     /* 周波数スライダー */
     input[type="range"] {
@@ -432,10 +445,12 @@
       line-height: 1.6;
     }
 
+    /* 右下の案内表示 */
     .toast-notification {
       position: fixed;
       bottom: 24px;
       right: 24px;
+      max-width: 340px;
       background: #0c1824;
       border: 1px solid var(--accent);
       color: var(--accent);
@@ -444,7 +459,20 @@
       box-shadow: 0 4px 20px rgba(0, 255, 204, 0.45);
       display: none;
       z-index: 2000;
+      cursor: pointer;
       animation: slideUp 0.3s ease;
+    }
+    .toast-notification .guide-text {
+      display: block;
+      color: var(--text);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    .toast-notification .guide-close {
+      display: block;
+      margin-top: 6px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
     }
     @keyframes slideUp {
       from { transform: translateY(30px); opacity: 0; }
@@ -473,15 +501,15 @@
       .modal-overlay { padding: 10px; align-items: flex-start; }
       .modal-box { padding: 18px 14px; max-height: calc(100dvh - 20px); margin-top: env(safe-area-inset-top); }
 
-      .popup-stage { height: 330px; }
-      .test-popup { padding: 10px; }
+      .test-popup { padding: 8px; }
 
       .credentials-box { padding: 10px 12px; letter-spacing: 0.06rem; }
       .cred-sep { display: block; height: 4px; overflow: hidden; color: transparent; }
 
       .toast-notification {
-        left: 16px;
-        right: 16px;
+        left: auto;
+        right: 12px;
+        max-width: calc(100vw - 24px);
         bottom: max(16px, env(safe-area-inset-bottom));
       }
     }
@@ -560,8 +588,8 @@
             <div class="exam-card" id="card-req-2">
               <div>
                 <span class="exam-status status-required">必須 02</span>
-                <h4 style="margin: 8px 0 4px 0;">ポップアップ削除</h4>
-                <p style="font-size: 0.8rem; color: var(--text-muted);">割り込み表示される妨害レイヤーの排除</p>
+                <h4 style="margin: 8px 0 4px 0;">言葉推測</h4>
+                <p style="font-size: 0.8rem; color: var(--text-muted);">妨害レイヤーを排除し、隠された言葉を特定</p>
               </div>
               <button class="btn btn-primary" onclick="openExamModal('req-2')">試験確認</button>
             </div>
@@ -656,13 +684,13 @@
 
           <div class="panel" style="background: #090e15; border-color: #233446; margin-bottom: 14px;">
             <div class="job-head">
-              <h3 style="font-size: 1.15rem; color: var(--accent);">確認作業:日比谷</h3>
+              <h3 style="font-size: 1.15rem; color: var(--accent);">確認作業:赤坂</h3>
               <span id="hibiya-capacity-badge" style="font-size: 0.8rem; padding: 2px 8px; border-radius: 4px; background: rgba(0,255,204,0.1); border: 1px solid var(--accent); color: var(--accent);">
                 残り1名
               </span>
             </div>
             <p style="font-size: 0.9rem; line-height: 1.6; color: var(--text); margin-bottom: 14px;">
-              日比谷で計画の一部となる重要な案件がある。チラシは既に配布済なので、それを元に作業をしてほしい。
+              赤坂で計画の一部となる重要な案件がある。都市伝説チラシは既に配布済なので、それを元に作業をしてほしい。
             </p>
 
             <button id="btn-apply-hibiya" class="btn btn-primary" onclick="applyHibiya()">応募する</button>
@@ -671,9 +699,9 @@
               <p style="color: var(--success); font-weight: bold; margin-bottom: 8px;">【応募を受理しました】</p>
               <div style="font-size: 0.9rem; line-height: 1.7; color: #d1d5db; white-space: pre-wrap;">こちらは、とある計画のために必須となる作戦です。
 
-日比谷駅のA12にある映画のポスターの二次元コードを読み取り、吹き出しの頭を上から読んで指示に従ってください。
+赤坂駅のA12にある映画のポスターの二次元コードを読み取り、吹き出しの頭を上から読んで指示に従ってください。
 
-これはチラシを既に渡した【封筒所有者】を利用するための都市伝説です。
+これは都市伝説チラシを既に渡した【封筒所有者】を利用するための作戦です。
 正しく動くか、確認してください。
 あなたが最後の確認者となります。</div>
             </div>
@@ -681,7 +709,7 @@
 
           <div class="panel" style="background: #090e15; border-color: #233446; opacity: 0.6;">
             <div class="job-head">
-              <h4 style="font-size: 1rem;">通信アンテナ補修:秋葉原</h4>
+              <h4 style="font-size: 1rem;">通信アンテナ補修:後楽園</h4>
               <span style="font-size: 0.8rem; padding: 2px 8px; border-radius: 4px; border: 1px solid #555; color: #888;">募集終了 (残り0名)</span>
             </div>
             <p style="font-size: 0.85rem; color: var(--text-muted);">
@@ -765,10 +793,11 @@
     </div>
   </div>
 
-  <!-- チャット受信ポップアップ -->
-  <div id="chat-toast" class="toast-notification">
-    <strong style="display: block; font-size: 0.95rem; margin-bottom: 2px;">⚡ 受信メッセージ</strong>
-    チャットが来ました
+  <!-- 右下の案内表示（タップで閉じる） -->
+  <div id="guide-toast" class="toast-notification" onclick="hideGuide()">
+    <strong style="display: block; font-size: 0.95rem; margin-bottom: 4px;">⚡ 次のアクション</strong>
+    <span id="guide-text" class="guide-text"></span>
+    <span class="guide-close">タップで閉じる</span>
   </div>
 
   <script>
@@ -790,6 +819,18 @@
           fn();
         }
       });
+    }
+
+    // 右下の案内表示
+    function showGuide(text) {
+      const toast = document.getElementById('guide-toast');
+      document.getElementById('guide-text').textContent = text;
+      toast.style.display = 'none';
+      void toast.offsetWidth; // アニメーションを再生し直す
+      toast.style.display = 'block';
+    }
+    function hideGuide() {
+      document.getElementById('guide-toast').style.display = 'none';
     }
 
     function showScreen(screenId) {
@@ -891,6 +932,7 @@
       STATE.currentUserRole = null;
       document.getElementById('login-id').value = '';
       document.getElementById('login-pass').value = '';
+      hideGuide();
       showScreen('screen-top');
     }
 
@@ -907,6 +949,7 @@
       if (tabId === 'tab-memo') tabs[2]?.classList.add('active');
     }
 
+    // 赤坂案件への応募
     function applyHibiya() {
       if (STATE.currentUserRole !== 'general') return;
       STATE.hibiyaApplied = true;
@@ -922,6 +965,8 @@
       hibiyaBtn.textContent = '応募済み';
       hibiyaDir.style.display = 'block';
       hibiyaDir.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+      showGuide('チャットに「応募しました」と送信しよう');
     }
 
     // フク脱出 (1007入力)
@@ -954,7 +999,7 @@
             STATE.isFukuTyping = false;
             memoArea.readOnly = false;
             document.getElementById('memo-lock-msg').style.display = 'none';
-            triggerChatToast();
+            showGuide('チャットに「フクを救出した」と送信しよう');
           }
         }
         setTimeout(typeNextChar, 400);
@@ -962,12 +1007,6 @@
     }
     memoArea.addEventListener('input', checkFuku);
     memoArea.addEventListener('compositionend', checkFuku); // スマホの日本語入力確定時
-
-    function triggerChatToast() {
-      const toast = document.getElementById('chat-toast');
-      toast.style.display = 'block';
-      setTimeout(() => { toast.style.display = 'none'; }, 5000);
-    }
 
     // ==========================================
     // 入社試験システム
@@ -978,8 +1017,8 @@
         rules: 'ディメンションの設立記念日（月日）を特定せよ。\n誤った回答を入力するごとに、解析データからヒントが1段階ずつ開放される。'
       },
       'req-2': {
-        title: '【必須】第2試験：ポップアップ削除',
-        rules: '画面上に現れている５つのポップアップを削除せよ。\nポップアップに含まれているカタカナを下に入力することで削除ができる。'
+        title: '【必須】第2試験：言葉推測',
+        rules: '画面上のポップアップを削除し、下に書かれている言葉を答えよ。\nポップアップに含まれているカタカナを下に入力することで削除ができる。\nこのポップアップ削除はhttps://v4.metrotimegate.com/d-siteの傘下に半永久的に適用されるので注意。'
       },
       'opt-1': {
         title: '【任意】第1試験：論理暗号解読',
@@ -1089,26 +1128,36 @@
       }
     }
 
-    // 必須2: ポップアップ削除（位置は%指定でスマホ幅にも対応）
+    // ==========================================
+    // 必須2: 言葉推測
+    // 5つのポップアップで下の「観測」を覆い隠す。
+    // 位置・サイズはステージに対する%指定（スマホ幅でも同じ配置になる）
+    // ==========================================
+    const HIDDEN_WORD = '観測';
+    const HIDDEN_WORD_ANSWERS = ['観測', 'かんそく', 'カンソク'];
     let popupsCleared = 0;
     const popupList = [
-      { id: 1, word: 'ウマイ', title: '【美味しいごはん】', desc: '美味しいごはん。梅干しウマイよ！', top: 25, left: 6, z: 50 },
-      { id: 2, word: 'アクセス', title: '【通信制限】', desc: '通信が制限されています。アクセスできません。', top: 55, left: 23, z: 40 },
-      { id: 3, word: 'セキュリティ', title: '【セキュリティ制限】', desc: '認証の整合性検証', top: 95, left: 13, z: 30 },
-      { id: 4, word: 'ネットワーク', title: '【帯域遮断警告】', desc: 'ネットワーク内への侵入者を検知', top: 125, left: 36, z: 20 },
-      { id: 5, word: 'システム', title: '【最終確認】', desc: 'システム中枢への認可確認', top: 155, left: 19, z: 10 }
+      { id: 1, word: 'ウマイ',       title: '【美味しいごはん】',   desc: '美味しいごはん。梅干しウマイよ！',             top: 6,  left: 6,  w: 46, h: 40, z: 20 },
+      { id: 2, word: 'アクセス',     title: '【通信制限】',         desc: '通信が制限されています。アクセスできません。', top: 12, left: 50, w: 44, h: 40, z: 21 },
+      { id: 3, word: 'セキュリティ', title: '【セキュリティ制限】', desc: 'セキュリティ認証の整合性検証',                 top: 46, left: 4,  w: 46, h: 44, z: 22 },
+      { id: 4, word: 'ネットワーク', title: '【帯域遮断警告】',     desc: 'ネットワーク内への侵入者を検知',               top: 50, left: 50, w: 46, h: 40, z: 23 },
+      { id: 5, word: 'システム',     title: '【最終確認】',         desc: 'システム中枢への認可確認',                     top: 34, left: 24, w: 52, h: 30, z: 30 }
     ];
 
     function initReq2(stage) {
       popupsCleared = 0;
       stage.innerHTML = `
         <div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:8px;">
-          ポップアップ内のカタカナ語を入力して消去してください（消去数: <span id="popup-count" style="color:var(--accent); font-weight:bold;">0</span> / 5）
+          ポップアップ内のカタカナ語を入力して削除し、下に書かれている言葉を答えてください（削除数: <span id="popup-count" style="color:var(--accent); font-weight:bold;">0</span> / 5）
         </div>
-        <div class="popup-stage" id="popup-stage"></div>
-        <div class="input-row">
-          <input type="text" id="popup-input" placeholder="カタカナを入力" autocomplete="off" enterkeyhint="done">
-          <button class="btn btn-primary" onclick="checkReq2()">消去</button>
+        <div class="popup-stage" id="popup-stage">
+          <div class="hidden-word">${HIDDEN_WORD}</div>
+        </div>
+        <div id="popup-msg" class="popup-msg"></div>
+        <input type="text" id="popup-input" placeholder="カタカナ または 言葉を入力" autocomplete="off" enterkeyhint="done">
+        <div class="word-actions">
+          <button class="btn" onclick="deletePopup()">ポップアップ削除</button>
+          <button class="btn btn-primary" onclick="answerWord()">言葉解答</button>
         </div>
       `;
 
@@ -1117,57 +1166,77 @@
         const el = document.createElement('div');
         el.className = 'test-popup';
         el.id = 'popup-node-' + p.id;
-        el.style.top = p.top + 'px';
+        el.style.top = p.top + '%';
         el.style.left = p.left + '%';
+        el.style.width = p.w + '%';
+        el.style.height = p.h + '%';
         el.style.zIndex = p.z;
         el.innerHTML = `
-          <div class="popup-body">
-            <div style="font-size:0.75rem; color:var(--danger); font-weight:bold; margin-bottom:4px;">${p.title}</div>
-            <div style="font-size:0.85rem; line-height:1.4;">${p.desc}</div>
-          </div>
+          <div style="font-size:0.75rem; color:var(--danger); font-weight:bold; margin-bottom:4px;">${p.title}</div>
+          <div style="font-size:0.85rem; line-height:1.4;">${p.desc}</div>
         `;
         stageBox.appendChild(el);
       });
 
-      onEnter(document.getElementById('popup-input'), checkReq2);
+      onEnter(document.getElementById('popup-input'), deletePopup);
     }
 
-    function checkReq2() {
-      const input = document.getElementById('popup-input').value.trim();
-      let matched = false;
+    // 「ポップアップ：●●●●を削除しました」を毎回表示
+    function showPopupMsg(word) {
+      const msg = document.getElementById('popup-msg');
+      if (!msg) return;
+      msg.textContent = `ポップアップ：${word}を削除しました`;
+      msg.classList.remove('show');
+      void msg.offsetWidth;
+      msg.classList.add('show');
+    }
 
+    function deletePopup() {
+      const inputEl = document.getElementById('popup-input');
+      const input = inputEl.value.trim();
+      if (!input) return;
+
+      // 「トキメキ」：フラグを保存し、通常の削除と同じメッセージを表示
       if (input === 'トキメキ') {
         try {
           localStorage.setItem('tokimeki_flag', 'true');
         } catch (e) {
           console.warn('localStorage access failed:', e);
         }
+        inputEl.value = '';
+        showPopupMsg(input);
+        return;
       }
 
-      popupList.forEach(p => {
+      const p = popupList.find(p => {
         const el = document.getElementById('popup-node-' + p.id);
-        if (el && !el.classList.contains('cleared') && input === p.word) {
-          el.classList.add('cleared');
-          el.innerHTML = `
-            <div class="popup-bubble">
-              💬 ポップアップを削除しました
-            </div>
-          `;
-          popupsCleared++;
-          matched = true;
-        }
+        return p.word === input && el && !el.classList.contains('removing');
       });
 
-      if (matched) {
-        document.getElementById('popup-input').value = '';
-        document.getElementById('popup-count').textContent = popupsCleared;
-        if (popupsCleared >= 5) {
-          setTimeout(() => {
-            finishExam('req-2', '5つのポップアップをすべて削除しました！');
-          }, 350);
-        }
-      } else {
+      if (!p) {
         alert('該当するポップアップが見つかりません。カタカナを正確に入力してください。');
+        return;
+      }
+
+      const el = document.getElementById('popup-node-' + p.id);
+      el.classList.add('removing');
+      setTimeout(() => { el.style.display = 'none'; }, 350);
+
+      popupsCleared++;
+      document.getElementById('popup-count').textContent = popupsCleared;
+      inputEl.value = '';
+      showPopupMsg(p.word);
+    }
+
+    function answerWord() {
+      const inputEl = document.getElementById('popup-input');
+      const input = inputEl.value.trim().replace(/\s+/g, '');
+      if (!input) return;
+
+      if (HIDDEN_WORD_ANSWERS.includes(input)) {
+        finishExam('req-2', '言葉推測クリア！');
+      } else {
+        alert('解答が違います。ポップアップを削除して、下に書かれている言葉を確認してください。');
       }
     }
 
